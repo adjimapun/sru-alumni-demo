@@ -1,0 +1,5 @@
+<?php
+require __DIR__.'/config.php';$u=require_login();
+$sql='SELECT r.*,m.member_no,a.full_name,p.channel FROM receipts r JOIN members m ON m.id=r.member_id JOIN applications a ON a.id=m.application_id JOIN payments p ON p.id=r.payment_id WHERE m.user_id=? ORDER BY r.id DESC LIMIT 1';
+$st=db()->prepare($sql);$st->execute([$u['id']]);$r=$st->fetch(); if(!$r){http_response_code(404);exit('ยังไม่มีใบเสร็จรับเงิน');}
+?><!doctype html><html lang="th"><head><meta charset="utf-8"><title>ใบเสร็จรับเงิน</title><link rel="stylesheet" href="assets/style.css"></head><body><main class="receipt"><h1>ใบเสร็จรับเงินอิเล็กทรอนิกส์</h1><h3>สมาคมศิษย์เก่ามหาวิทยาลัยราชภัฏสุราษฎร์ธานี</h3><hr><p>เลขที่ใบเสร็จ: <b><?=h($r['receipt_no'])?></b></p><p>วันที่: <?=h($r['receipt_date'])?></p><p>ชื่อผู้ชำระ: <?=h($r['full_name'])?></p><p>เลขสมาชิก: <?=h($r['member_no'])?></p><p>รายการ: ค่าธรรมเนียมสมาชิกสมาคมศิษย์เก่า</p><p>จำนวนเงิน: <b><?=number_format((float)$r['amount'],2)?> บาท</b></p><p>ช่องทาง: <?=h($r['channel'])?></p><button class="btn no-print" onclick="print()">พิมพ์ / บันทึกเป็น PDF</button></main></body></html>
