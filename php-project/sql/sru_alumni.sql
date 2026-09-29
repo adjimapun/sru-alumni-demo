@@ -1,0 +1,100 @@
+CREATE DATABASE IF NOT EXISTS sru_alumni CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE sru_alumni;
+
+CREATE TABLE users (
+  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  citizen_hash CHAR(64) NOT NULL UNIQUE,
+  citizen_last4 CHAR(4) NOT NULL,
+  phone VARCHAR(20) NOT NULL UNIQUE,
+  password_hash VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+CREATE TABLE applications (
+  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  user_id BIGINT UNSIGNED NOT NULL UNIQUE,
+  application_no VARCHAR(30) UNIQUE NULL,
+  full_name VARCHAR(255) NOT NULL,
+  nickname VARCHAR(100) NULL,
+  gender VARCHAR(40) NULL,
+  birth_date DATE NULL,
+  student_code VARCHAR(50) NULL,
+  generation VARCHAR(50) NULL,
+  entry_year VARCHAR(10) NULL,
+  faculty_major VARCHAR(255) NULL,
+  degree VARCHAR(100) NULL,
+  grad_year VARCHAR(10) NULL,
+  address TEXT NULL,
+  phone VARCHAR(20) NULL,
+  email VARCHAR(255) NULL,
+  line_id VARCHAR(100) NULL,
+  workplace VARCHAR(255) NULL,
+  position VARCHAR(255) NULL,
+  occupation VARCHAR(255) NULL,
+  member_type VARCHAR(100) NOT NULL DEFAULT 'สมาชิกสามัญ',
+  status VARCHAR(40) NOT NULL DEFAULT 'pending_payment',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  CONSTRAINT fk_app_user FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+CREATE TABLE admins (
+  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  username VARCHAR(100) NOT NULL UNIQUE,
+  password_hash VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+CREATE TABLE payments (
+  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  application_id BIGINT UNSIGNED NOT NULL,
+  paid_date DATE NULL,
+  paid_time TIME NULL,
+  amount DECIMAL(10,2) NOT NULL DEFAULT 100.00,
+  channel VARCHAR(100) NULL,
+  slip_path VARCHAR(255) NULL,
+  status VARCHAR(30) NOT NULL DEFAULT 'pending',
+  note VARCHAR(500) NULL,
+  reviewer_id BIGINT UNSIGNED NULL,
+  reviewed_at DATETIME NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_pay_app FOREIGN KEY(application_id) REFERENCES applications(id) ON DELETE CASCADE,
+  CONSTRAINT fk_pay_admin FOREIGN KEY(reviewer_id) REFERENCES admins(id) ON DELETE SET NULL,
+  INDEX idx_pay_app(application_id), INDEX idx_pay_status(status)
+) ENGINE=InnoDB;
+
+CREATE TABLE members (
+  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  application_id BIGINT UNSIGNED NOT NULL UNIQUE,
+  user_id BIGINT UNSIGNED NOT NULL UNIQUE,
+  member_no VARCHAR(30) NOT NULL UNIQUE,
+  approved_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_member_app FOREIGN KEY(application_id) REFERENCES applications(id) ON DELETE CASCADE,
+  CONSTRAINT fk_member_user FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+CREATE TABLE receipts (
+  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  member_id BIGINT UNSIGNED NOT NULL,
+  payment_id BIGINT UNSIGNED NOT NULL UNIQUE,
+  receipt_no VARCHAR(40) NOT NULL UNIQUE,
+  receipt_date DATE NOT NULL,
+  amount DECIMAL(10,2) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_receipt_member FOREIGN KEY(member_id) REFERENCES members(id) ON DELETE CASCADE,
+  CONSTRAINT fk_receipt_payment FOREIGN KEY(payment_id) REFERENCES payments(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+CREATE TABLE trainings (
+  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  member_id BIGINT UNSIGNED NOT NULL,
+  title VARCHAR(255) NOT NULL,
+  activity_date DATE NULL,
+  organizer VARCHAR(255) NULL,
+  location VARCHAR(255) NULL,
+  hours DECIMAL(6,2) NULL,
+  certificate_path VARCHAR(255) NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_training_member FOREIGN KEY(member_id) REFERENCES members(id) ON DELETE CASCADE,
+  INDEX idx_training_member(member_id), INDEX idx_training_date(activity_date)
+) ENGINE=InnoDB;
