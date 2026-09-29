@@ -1,0 +1,13 @@
+<?php
+require __DIR__.'/config.php';$u=require_login();$pdo=db();
+$st=$pdo->prepare('SELECT m.* FROM members m WHERE m.user_id=?');$st->execute([$u['id']]);$m=$st->fetch();
+if(!$m){http_response_code(403);exit('เมนูนี้ใช้ได้เมื่อได้รับอนุมัติเป็นสมาชิกแล้ว');}
+$err='';
+if($_SERVER['REQUEST_METHOD']==='POST'){verify_csrf();try{
+ $title=trim($_POST['title']??'');if($title==='')throw new RuntimeException('กรุณากรอกชื่อกิจกรรม');
+ $cert=upload_file('certificate','cert_');
+ $pdo->prepare('INSERT INTO trainings(member_id,title,activity_date,organizer,location,hours,certificate_path) VALUES(?,?,?,?,?,?,?)')->execute([$m['id'],$title,$_POST['activity_date']?:null,trim($_POST['organizer']??''),trim($_POST['location']??''),(float)($_POST['hours']??0),$cert]);
+ header('Location: training.php');exit;
+}catch(Throwable $e){$err=$e->getMessage();}}
+$st=$pdo->prepare('SELECT * FROM trainings WHERE member_id=? ORDER BY activity_date DESC,id DESC');$st->execute([$m['id']]);$rows=$st->fetchAll();
+?><!doctype html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ประวัติพัฒนาศักยภาพ</title><link rel="stylesheet" href="assets/style.css"></head><body><header><div class="brand">SRU Alumni</div><nav><a href="dashboard.php">Dashboard</a></nav></header><main class="container"><div class="card"><h1>ประวัติการฝึกอบรมและพัฒนาศักยภาพ</h1><?php if($err):?><div class="alert danger"><?=h($err)?></div><?php endif;?><form method="post" enctype="multipart/form-data"><input type="hidden" name="csrf" value="<?=h(csrf_token())?>"><div class="form-grid"><label>ชื่อหลักสูตร/กิจกรรม<input name="title" required></label><label>วันที่<input type="date" name="activity_date"></label><label>หน่วยงานผู้จัด<input name="organizer"></label><label>สถานที่<input name="location"></label><label>จำนวนชั่วโมง<input type="number" step="0.5" name="hours"></label><label>เกียรติบัตร/วุฒิบัตร<input type="file" name="certificate" accept=".jpg,.jpeg,.png,.pdf"></label></div><button class="btn">บันทึก</button></form></div><div class="card"><h2>รายการย้อนหลัง</h2><table><tr><th>กิจกรรม</th><th>วันที่</th><th>หน่วยงาน</th><th>ชั่วโมง</th><th>หลักฐาน</th></tr><?php foreach($rows as $x):?><tr><td><?=h($x['title'])?></td><td><?=h($x['activity_date'])?></td><td><?=h($x['organizer'])?></td><td><?=h((string)$x['hours'])?></td><td><?php if($x['certificate_path']):?><a href="<?=h($x['certificate_path'])?>" target="_blank">เปิด</a><?php endif;?></td></tr><?php endforeach;?></table></div></main></body></html>
