@@ -59,6 +59,7 @@ $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' :
 $basePath = rtrim(str_replace('\\','/',dirname($_SERVER['PHP_SELF'])), '/');
 $verifyUrl = $scheme.'://'.$_SERVER['HTTP_HOST'].$basePath.'/verify_receipt.php?code='.urlencode($r['verification_code']);
 $downloadName = 'SRU-Alumni-Receipt-'.$r['receipt_no'].'.png';
+$receiptSettings = receipt_settings();
 ?>
 <!doctype html>
 <html lang="th">
@@ -97,7 +98,7 @@ body{margin:0;background:#eaf4f8;font-family:'Kanit',sans-serif;color:#123b59}
 .verify{display:grid;grid-template-columns:108px 1fr;gap:14px;align-items:center;margin-top:14px;background:#fff;border:1px solid #9fd1e1;border-radius:14px;padding:12px}
 #qrcode{width:100px;height:100px;display:grid;place-items:center}.verify-code{font-family:monospace;font-size:12px;word-break:break-all;color:#5d7280}
 .footer{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;margin-top:22px;padding-bottom:10px}
-.thank{font-size:15px;color:#527589}.signature{text-align:center;min-width:260px}.signature .line{border-top:1px solid #7fa9bb;margin-top:38px;padding-top:7px}
+.thank{font-size:15px;color:#527589}.signature{text-align:center;min-width:260px}.signature-image{display:block;max-width:220px;max-height:78px;object-fit:contain;margin:0 auto 4px}.signature .line{border-top:1px solid #7fa9bb;margin-top:38px;padding-top:7px}
 .system-note{text-align:center;font-size:12px;color:#7691a0;margin-top:10px}
 @media(max-width:850px){.top{grid-template-columns:90px 1fr}.emblem{width:84px;height:100px;font-size:12px}.doc-meta{grid-column:1/-1;text-align:left}.content{grid-template-columns:1fr}.title{width:100%}.assoc h1{font-size:24px}.receipt-card{padding:28px 20px}.info-row{grid-template-columns:130px 1fr}}
 @media print{body{background:#fff}.page{margin:0;max-width:none;padding:0}.toolbar{display:none}.receipt-card{box-shadow:none;border:0;border-radius:0}}
@@ -187,7 +188,19 @@ body{margin:0;background:#eaf4f8;font-family:'Kanit',sans-serif;color:#123b59}
   <div class="footer">
     <div class="thank">✓ ขอบคุณที่ร่วมเป็นส่วนหนึ่งในการพัฒนามหาวิทยาลัยของเรา</div>
     <div class="signature">
-      <div class="line">ผู้รับเงิน<br>สมาคมศิษย์เก่ามหาวิทยาลัยราชภัฏสุราษฎร์ธานี</div>
+      <?php if (!empty($receiptSettings['signature_path'])): ?>
+        <img
+          class="signature-image"
+          src="<?=h($receiptSettings['signature_path'])?>"
+          alt="ลายเซ็นผู้รับเงิน"
+        >
+      <?php endif; ?>
+      <div class="line">
+        <b><?=h((string)$receiptSettings['payee_name'])?></b>
+        <?php if (!empty($receiptSettings['payee_position'])): ?>
+          <br><?=h((string)$receiptSettings['payee_position'])?>
+        <?php endif; ?>
+      </div>
     </div>
   </div>
 
