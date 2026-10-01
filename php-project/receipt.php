@@ -50,6 +50,7 @@ $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' :
 $basePath = rtrim(str_replace('\\','/',dirname($_SERVER['PHP_SELF'])), '/');
 $verifyUrl = $scheme.'://'.$_SERVER['HTTP_HOST'].$basePath.'/verify_receipt.php?code='.urlencode($r['verification_code']);
 $downloadName = 'SRU-Alumni-Receipt-'.$r['receipt_no'].'.png';
+$receiptSettings = receipt_settings();
 ?>
 <!doctype html>
 <html lang="th">
@@ -210,7 +211,7 @@ body{margin:0;background:#eaf4f8;font-family:'Kanit',sans-serif;color:#123b59}
   padding-bottom:10px;
 }
 .thank{font-size:15px;color:#527589}
-.signature{text-align:center;min-width:260px}
+.signature{text-align:center;min-width:260px}.signature-image{display:block;max-width:220px;max-height:78px;object-fit:contain;margin:0 auto 4px}
 .signature .line{border-top:1px solid #7fa9bb;margin-top:38px;padding-top:7px}
 .system-note{text-align:center;font-size:12px;color:#7691a0;margin-top:10px}
 
@@ -304,7 +305,19 @@ body{margin:0;background:#eaf4f8;font-family:'Kanit',sans-serif;color:#123b59}
   <div class="footer">
     <div class="thank">✓ ขอบคุณที่ร่วมเป็นส่วนหนึ่งในการพัฒนามหาวิทยาลัยของเรา</div>
     <div class="signature">
-      <div class="line">ผู้รับเงิน<br>สมาคมศิษย์เก่ามหาวิทยาลัยราชภัฏสุราษฎร์ธานี</div>
+      <?php if (!empty($receiptSettings['signature_path'])): ?>
+        <img
+          class="signature-image"
+          src="<?=h($receiptSettings['signature_path'])?>"
+          alt="ลายเซ็นผู้รับเงิน"
+        >
+      <?php endif; ?>
+      <div class="line">
+        <b><?=h((string)$receiptSettings['payee_name'])?></b>
+        <?php if (!empty($receiptSettings['payee_position'])): ?>
+          <br><?=h((string)$receiptSettings['payee_position'])?>
+        <?php endif; ?>
+      </div>
     </div>
   </div>
 
