@@ -69,10 +69,33 @@ CREATE TABLE applications (
 
 CREATE TABLE admins (
   id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  full_name VARCHAR(255) NULL,
   username VARCHAR(100) NOT NULL UNIQUE,
   password_hash VARCHAR(255) NOT NULL,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  is_active TINYINT(1) NOT NULL DEFAULT 1,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  INDEX idx_admin_active(is_active)
 ) ENGINE=InnoDB;
+
+CREATE TABLE receipt_settings (
+  id TINYINT UNSIGNED PRIMARY KEY,
+  payee_name VARCHAR(255) NOT NULL,
+  payee_position VARCHAR(255) NULL,
+  signature_path VARCHAR(255) NULL,
+  updated_by BIGINT UNSIGNED NULL,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  CONSTRAINT fk_receipt_settings_admin
+    FOREIGN KEY(updated_by) REFERENCES admins(id) ON DELETE SET NULL
+) ENGINE=InnoDB;
+
+INSERT INTO receipt_settings(id,payee_name,payee_position,signature_path)
+VALUES(
+  1,
+  'ผู้รับเงิน',
+  'สมาคมศิษย์เก่ามหาวิทยาลัยราชภัฏสุราษฎร์ธานี',
+  NULL
+);
 
 CREATE TABLE payments (
   id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
