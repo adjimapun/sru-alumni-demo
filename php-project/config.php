@@ -67,3 +67,11 @@ function app_status_th(string $s): string {
       'approved'=>'สมาชิกสมบูรณ์'
     ][$s] ?? $s;
 }
+
+function payment_status_th(string $s): string {
+    return [
+      'pending'=>'รอตรวจสอบหลักฐานการชำระเงิน',
+      'paid'=>'ชำระเงินแล้ว',
+      'invalid'=>'หลักฐานการชำระเงินไม่ถูกต้อง'
+    ][$s] ?? $s;
+}
