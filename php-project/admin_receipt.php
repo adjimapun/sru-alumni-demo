@@ -123,7 +123,7 @@ body{margin:0;background:#eaf4f8;font-family:'Kanit',sans-serif;color:#123b59}
 <div id="receiptCard" class="receipt-card">
   <div class="top">
     <div class="emblem">
-      <img src="assets/alumni-logo.jpg" alt="โลโก้สมาคมศิษย์เก่ามหาวิทยาลัยราชภัฏสุราษฎร์ธานี">
+      <img src="assets/alumni-logo.png" alt="โลโก้สมาคมศิษย์เก่ามหาวิทยาลัยราชภัฏสุราษฎร์ธานี">
     </div>
 
     <div class="assoc">
