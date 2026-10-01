@@ -427,7 +427,7 @@ function admin_status_class(string $status): string
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SRU Alumni Admin</title>
+<title>SRU Alumni Association Admin</title>
 <link rel="stylesheet" href="assets/style.css">
 
 <style>
@@ -509,7 +509,7 @@ function admin_status_class(string $status): string
 <body>
 
 <header>
-  <div class="brand">SRU Alumni Admin</div>
+  <div class="brand">SRU Alumni Association Admin</div>
   <nav>
     <a href="admin_dashboard.php">แดชบอร์ด</a>
     <a href="admin.php">ใบสมัคร</a>
