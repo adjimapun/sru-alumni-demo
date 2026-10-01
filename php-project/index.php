@@ -121,8 +121,8 @@ header{
   flex:0 0 auto;
 }
 .crest img{
-  width:58px;
-  height:58px;
+  width:100%;
+  height:100%;
   object-fit:contain;
   display:block;
 }
