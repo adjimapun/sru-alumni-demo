@@ -151,13 +151,21 @@ header small{display:block;opacity:.84}
 }
 
 .menu{
-  display:block;
+  display:flex;
+  align-items:center;
+  gap:8px;
   text-decoration:none;
   padding:11px 12px;
   border-radius:10px;
   margin:5px 0;
   cursor:pointer;
   color:#536c80;
+}
+.menu-icon{
+  width:18px;
+  height:18px;
+  display:block;
+  flex:0 0 18px;
 }
 
 .menu:hover,.menu.on{
@@ -374,7 +382,12 @@ input:focus{
 <aside class="side">
   <div class="side-title">SRU Alumni Association Digital Service</div>
   <p class="note">ยังไม่ได้เข้าสู่ระบบ</p>
-  <a class="menu on" href="index.php">⌂ หน้าหลัก</a>
+  <a class="menu on" href="index.php">
+    <svg class="menu-icon" viewBox="0 0 24 24" aria-hidden="true">
+      <path fill="currentColor" d="M12 3.2 2.8 10.7a1 1 0 0 0 1.3 1.5L5 11.5V20a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1v-8.5l.9.7a1 1 0 1 0 1.3-1.5L12 3.2Z"/>
+    </svg>
+    <span>หน้าหลัก</span>
+  </a>
   <a
     class="menu"
     href="contact.php"
