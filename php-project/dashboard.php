@@ -39,7 +39,7 @@ $memberNo = $member['member_no'] ?? 'ยังไม่ได้รับเล�
 body{margin:0;font-family:'Kanit',sans-serif;background:var(--bg);color:var(--ink)}
 a{color:inherit}.shell{display:grid;grid-template-columns:230px 1fr;max-width:1280px;margin:22px auto;gap:20px;padding:0 16px}
 header{background:linear-gradient(120deg,#064c78,#0786a6);color:#fff;padding:16px 5%;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:20}
-.crest{width:58px;height:58px;border-radius:12px;background:#fff;color:var(--p);display:grid;place-items:center;font-weight:700;flex:0 0 auto}
+.crest{width:58px;height:58px;display:grid;place-items:center;flex:0 0 auto}.crest img{width:58px;height:58px;object-fit:contain;display:block}
 header small{display:block;opacity:.84}.demo{margin-left:auto;font-size:12px;background:#ffffff22;padding:7px 11px;border-radius:18px;white-space:nowrap}
 .side,.card{background:#fff;border-radius:18px;box-shadow:0 8px 28px #173b5512}.side{padding:18px;height:max-content;position:sticky;top:105px}
 .side-title{font-weight:600}.note{font-size:12px;color:var(--mut)}.side .note{margin:6px 0 12px}
@@ -54,7 +54,7 @@ header small{display:block;opacity:.84}.demo{margin-left:auto;font-size:12px;bac
 </head>
 <body>
 <header>
-  <div class="crest">ศ.มรส.</div>
+  <div class="crest"><img src="assets/alumni-logo.jpg" alt="โลโก้สมาคมศิษย์เก่ามหาวิทยาลัยราชภัฏสุราษฎร์ธานี"></div>
   <div>
     <b>สมาคมศิษย์เก่ามหาวิทยาลัยราชภัฏสุราษฎร์ธานี</b>
     <small>Suratthani Rajabhat University Alumni Association</small>
