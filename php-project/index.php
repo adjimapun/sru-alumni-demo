@@ -346,7 +346,7 @@ input:focus{
 <body>
 
 <header>
-  <div class="crest"><img src="assets/alumni-logo.jpg" alt="โลโก้สมาคมศิษย์เก่ามหาวิทยาลัยราชภัฏสุราษฎร์ธานี"></div>
+  <div class="crest"><img src="assets/alumni-logo.png" alt="โลโก้สมาคมศิษย์เก่ามหาวิทยาลัยราชภัฏสุราษฎร์ธานี"></div>
   <div>
     <b>สมาคมศิษย์เก่ามหาวิทยาลัยราชภัฏสุราษฎร์ธานี</b>
     <small>Suratthani Rajabhat University Alumni Association</small>
