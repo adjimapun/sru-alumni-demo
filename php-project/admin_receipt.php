@@ -95,7 +95,7 @@ body{margin:0;background:#eaf4f8;font-family:'Kanit',sans-serif;color:#123b59}
 .content{display:grid;grid-template-columns:1fr 1fr;gap:22px}
 .panel{background:#f4fbfe;border:1px solid #d7eaf1;border-radius:18px;padding:20px}
 .panel h3{margin:0 0 14px;color:#064d76;display:flex;align-items:center;gap:9px}
-.icon{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:#075b8f;color:#fff;font-size:17px}
+.icon{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:#075b8f;color:#fff;font-size:17px}.icon svg{width:19px;height:19px;display:block;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .info-row{display:grid;grid-template-columns:150px 1fr;gap:8px;padding:4px 0}.info-row .label{font-weight:500;color:#3d6277}
 .payment-box{margin-top:15px;padding:16px;background:#fff;border:1px solid #9fd1e1;border-radius:14px}
 .total{display:flex;justify-content:space-between;align-items:end;padding:18px;border:1px solid #85c9dd;border-radius:14px;margin-top:14px;background:linear-gradient(90deg,#f5fcff,#eaf9fd)}
@@ -146,14 +146,22 @@ body{margin:0;background:#eaf4f8;font-family:'Kanit',sans-serif;color:#123b59}
   <div class="content">
     <div>
       <div class="panel">
-        <h3><span class="icon">👤</span>ได้รับเงินจาก</h3>
+        <h3><span class="icon" aria-hidden="true">
+  <svg viewBox="0 0 24 24" focusable="false">
+    <path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm7 8a7 7 0 0 0-14 0"/>
+  </svg>
+</span>ได้รับเงินจาก</h3>
         <div class="info-row"><div class="label">ชื่อ-นามสกุล</div><div><?=h(trim($r['title_prefix'].' '.$r['full_name']))?></div></div>
         <div class="info-row"><div class="label">เลขที่สมาชิก</div><div><b><?=h($r['member_no'])?></b></div></div>
         <div class="info-row"><div class="label">ประเภทสมาชิก</div><div><?=h($memberTypeText)?></div></div>
       </div>
 
       <div class="panel" style="margin-top:16px">
-        <h3><span class="icon">🏦</span>ช่องทางการชำระเงิน</h3>
+        <h3><span class="icon" aria-hidden="true">
+  <svg viewBox="0 0 24 24" focusable="false">
+    <path d="M3 9h18M5 9v8m4-8v8m6-8v8m4-8v8M3 17h18M2 20h20M12 3l9 4H3l9-4Z"/>
+  </svg>
+</span>ช่องทางการชำระเงิน</h3>
         <div><b>ธนาคารกรุงไทย จำกัด (มหาชน) สาขาขุนทะเล</b></div>
         <div>ชื่อบัญชี : สมาคมศิษย์เก่ามหาวิทยาลัยราชภัฏสุราษฎร์ธานี</div>
         <div>เลขที่บัญชี : <b>664-3-78504-9</b></div>
