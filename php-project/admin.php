@@ -20,7 +20,8 @@ if (!current_admin()) {
         $st->execute([trim($_POST['username'] ?? '')]);
         $a = $st->fetch();
 
-        if ($a && password_verify($_POST['password'] ?? '', $a['password_hash'])) {
+        $isActive = $a && (!isset($a['is_active']) || (int)$a['is_active'] === 1);
+        if ($isActive && password_verify($_POST['password'] ?? '', $a['password_hash'])) {
             session_regenerate_id(true);
             $_SESSION['admin_id'] = $a['id'];
             header('Location: admin_dashboard.php');
@@ -513,7 +514,16 @@ function admin_status_class(string $status): string
   <nav>
     <a href="admin_dashboard.php">แดชบอร์ด</a>
     <a href="admin.php">ใบสมัคร</a>
-    <a href="admin_master.php">ข้อมูลคณะ / ประเภทสมาชิก</a>
+
+    <span class="nav-settings">
+      <a href="admin_settings.php">ตั้งค่า ▾</a>
+      <span class="nav-submenu">
+        <a href="admin_receipt_settings.php">ผู้รับเงิน / ลายเซ็นใบเสร็จ</a>
+        <a href="admin_master.php">คณะ / ประเภทสมาชิก</a>
+        <a href="admin_users.php">ผู้ดูแลระบบหลังบ้าน</a>
+      </span>
+    </span>
+
     <a href="index.php">หน้าหลักของระบบ</a>
     <a href="admin.php?logout=1">ออกจากระบบ</a>
   </nav>
@@ -533,9 +543,7 @@ function admin_status_class(string $status): string
 <?php endif; ?>
 
 <div class="actions" style="margin-bottom:16px">
-  <a class="btn alt" href="admin_master.php">
-    จัดการข้อมูลคณะ / ประเภทสมาชิก
-  </a>
+  <a class="btn alt" href="admin_settings.php">⚙ ตั้งค่าระบบ</a>
 </div>
 
 <div class="filter-box">
