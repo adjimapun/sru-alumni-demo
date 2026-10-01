@@ -64,7 +64,7 @@ header small{display:block;opacity:.84}.demo{margin-left:auto;font-size:12px;bac
 
 <div class="shell">
 <aside class="side">
-  <div class="side-title">SRU Alumni Digital Service</div>
+  <div class="side-title">SRU Alumni Association Digital Service</div>
   <p class="note">เข้าสู่ระบบ: <?=h($maskedCitizen)?></p>
   <a class="menu on" href="dashboard.php">⌂ หน้าหลัก</a>
   <a class="menu" href="application.php">▤ ใบสมัครสมาชิก</a>
