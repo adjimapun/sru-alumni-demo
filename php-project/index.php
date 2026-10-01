@@ -372,7 +372,7 @@ input:focus{
 <div class="shell">
 
 <aside class="side">
-  <div class="side-title">SRU Alumni Digital Service</div>
+  <div class="side-title">SRU Alumni Association Digital Service</div>
   <p class="note">ยังไม่ได้เข้าสู่ระบบ</p>
   <a class="menu on" href="index.php">⌂ หน้าหลัก</a>
   <a
