@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $schemaReady) {
             if ($fullName === '') {
                 throw new RuntimeException('กรุณาระบุชื่อเจ้าหน้าที่');
             }
-            if (mb_strlen($username) < 3) {
+            if (strlen($username) < 3) {
                 throw new RuntimeException('Username ต้องมีอย่างน้อย 3 ตัวอักษร');
             }
             if (strlen($password) < 8) {
@@ -134,7 +134,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $schemaReady) {
         )->fetchAll();
 
     } catch (PDOException $e) {
-        if ((int)$e->errorInfo[1] === 1062) {
+        if ((int)($e->errorInfo[1] ?? 0) === 1062) {
             $error = 'Username นี้ถูกใช้งานแล้ว';
         } else {
             $error = 'ไม่สามารถบันทึกข้อมูลผู้ดูแลระบบได้';
