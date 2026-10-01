@@ -99,10 +99,15 @@ CREATE TABLE members (
   user_id BIGINT UNSIGNED NOT NULL UNIQUE,
   approved_payment_id BIGINT UNSIGNED NOT NULL UNIQUE,
   member_no VARCHAR(30) NOT NULL UNIQUE,
-  approved_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  status VARCHAR(20) NOT NULL DEFAULT 'active',
+  approved_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  cancelled_at DATETIME NULL,
+  cancelled_by BIGINT UNSIGNED NULL,
   CONSTRAINT fk_member_app FOREIGN KEY(application_id) REFERENCES applications(id) ON DELETE CASCADE,
   CONSTRAINT fk_member_user FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE,
-  CONSTRAINT fk_member_payment FOREIGN KEY(approved_payment_id) REFERENCES payments(id) ON DELETE RESTRICT
+  CONSTRAINT fk_member_payment FOREIGN KEY(approved_payment_id) REFERENCES payments(id) ON DELETE RESTRICT,
+  CONSTRAINT fk_member_cancel_admin FOREIGN KEY(cancelled_by) REFERENCES admins(id) ON DELETE SET NULL,
+  INDEX idx_member_status(status)
 ) ENGINE=InnoDB;
 
 CREATE TABLE receipts (
@@ -113,10 +118,13 @@ CREATE TABLE receipts (
   receipt_date DATE NOT NULL,
   amount DECIMAL(10,2) NOT NULL,
   verification_code CHAR(32) NOT NULL UNIQUE,
+  status VARCHAR(20) NOT NULL DEFAULT 'active',
+  cancelled_at DATETIME NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT fk_receipt_member FOREIGN KEY(member_id) REFERENCES members(id) ON DELETE CASCADE,
   CONSTRAINT fk_receipt_payment FOREIGN KEY(payment_id) REFERENCES payments(id) ON DELETE CASCADE,
-  INDEX idx_receipt_verify(verification_code)
+  INDEX idx_receipt_verify(verification_code),
+  INDEX idx_receipt_status(status)
 ) ENGINE=InnoDB;
 
 CREATE TABLE trainings (
