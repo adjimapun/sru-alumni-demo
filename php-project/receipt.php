@@ -18,7 +18,7 @@ $sql = 'SELECT
         JOIN applications a ON a.id=m.application_id
         LEFT JOIN member_types mt ON mt.id=a.member_type_id
         JOIN payments p ON p.id=r.payment_id
-        WHERE m.user_id=?
+        WHERE m.user_id=? AND m.status="active" AND r.status="active"
         ORDER BY r.id DESC
         LIMIT 1';
 
