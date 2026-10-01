@@ -412,7 +412,7 @@ header small{
                 rel="noopener noreferrer"
               >เพิ่มเพื่อน LINE OA SRU360</a>
             </div>
-            <div class="line-id">ID : @626ogansn</div>
+            <div class="line-id">ID : @626ogasn</div>
           </div>
         </div>
       </div>
