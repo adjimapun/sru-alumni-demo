@@ -361,6 +361,7 @@ $sql = 'SELECT
             m.id AS member_id,
             m.member_no,
             m.status AS member_status,
+            r.id AS receipt_id,
             r.receipt_no,
             (SELECT id
              FROM payments p
@@ -708,9 +709,11 @@ $canApprove = !$isApproved && !empty($r['payment_id']);
 -
 <?php endif; ?>
 
-<?php if ($r['receipt_no']): ?>
+<?php if ($r['receipt_no'] && $r['receipt_id']): ?>
 <br>
-<span class="note">ใบเสร็จ <?=h($r['receipt_no'])?></span>
+<a class="note" href="admin_receipt.php?id=<?=h((string)$r['receipt_id'])?>" target="_blank">
+  ดูใบเสร็จ <?=h($r['receipt_no'])?>
+</a>
 <?php endif; ?>
 </td>
 
