@@ -42,8 +42,11 @@ function require_login(): array {
 }
 function current_admin(): ?array {
     if (empty($_SESSION['admin_id'])) return null;
-    $st=db()->prepare('SELECT * FROM admins WHERE id=?'); $st->execute([$_SESSION['admin_id']]);
-    return $st->fetch() ?: null;
+    $st=db()->prepare('SELECT * FROM admins WHERE id=?');
+    $st->execute([$_SESSION['admin_id']]);
+    $admin=$st->fetch() ?: null;
+    if ($admin && isset($admin['is_active']) && (int)$admin['is_active'] !== 1) return null;
+    return $admin;
 }
 function thai_year(): int { return (int)date('Y') + 543; }
 function upload_file(string $field, string $prefix): ?string {
@@ -74,4 +77,28 @@ function payment_status_th(string $s): string {
       'paid'=>'ชำระเงินแล้ว',
       'invalid'=>'หลักฐานการชำระเงินไม่ถูกต้อง'
     ][$s] ?? $s;
+}
+
+
+function receipt_settings(): array {
+    $defaults = [
+        'payee_name' => 'ผู้รับเงิน',
+        'payee_position' => 'สมาคมศิษย์เก่ามหาวิทยาลัยราชภัฏสุราษฎร์ธานี',
+        'signature_path' => null,
+    ];
+
+    try {
+        $st = db()->query('SELECT payee_name,payee_position,signature_path FROM receipt_settings WHERE id=1 LIMIT 1');
+        $row = $st->fetch();
+        if (!$row) return $defaults;
+
+        return [
+            'payee_name' => trim((string)($row['payee_name'] ?? '')) ?: $defaults['payee_name'],
+            'payee_position' => trim((string)($row['payee_position'] ?? '')) ?: $defaults['payee_position'],
+            'signature_path' => $row['signature_path'] ?? null,
+        ];
+    } catch (PDOException $e) {
+        // รองรับระบบที่ยังไม่ได้รัน migrate_v4.sql โดยใช้ค่าเดิมชั่วคราว
+        return $defaults;
+    }
 }
