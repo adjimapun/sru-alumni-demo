@@ -9,7 +9,7 @@ $app = $st->fetch();
 
 $member = null;
 if ($app) {
-    $st = $pdo->prepare('SELECT * FROM members WHERE application_id=? LIMIT 1');
+    $st = $pdo->prepare('SELECT * FROM members WHERE application_id=? AND status="active" LIMIT 1');
     $st->execute([$app['id']]);
     $member = $st->fetch();
 }
