@@ -207,6 +207,11 @@ header small{display:block;opacity:.84}
 
 .authHead h2{margin-bottom:6px}
 .note{font-size:12px;color:var(--mut)}
+.authHead .note{
+  color:var(--p);
+  font-size:13px;
+  font-weight:500;
+}
 
 .authTabs{
   display:grid;
@@ -328,6 +333,26 @@ input:focus{
 .side-title{font-weight:600}
 .side .note{margin:6px 0 12px}
 
+.site-footer{
+  max-width:1280px;
+  margin:6px auto 22px;
+  padding:0 16px;
+}
+.site-footer-inner{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:15px 20px;
+  text-align:center;
+  color:#5f7485;
+  font-size:12px;
+  box-shadow:0 6px 20px #173b550b;
+}
+.site-footer-inner b{
+  color:var(--p);
+  font-weight:600;
+}
+
 @media(max-width:900px){
   .shell{grid-template-columns:1fr}
   .side{display:none}
@@ -361,8 +386,12 @@ input:focus{
   <div class="side-title">SRU Alumni Digital Service</div>
   <p class="note">ยังไม่ได้เข้าสู่ระบบ</p>
   <a class="menu on" href="index.php">⌂ หน้าหลัก</a>
-  <a class="menu" href="application.php">▤ ใบสมัครสมาชิก</a>
-  <a class="menu" href="track.php">◷ ติดตามสถานะ</a>
+  <a
+    class="menu"
+    href="https://my.sru.ac.th/reg/portal/contact.php"
+    target="_blank"
+    rel="noopener noreferrer"
+  >☎ ติดต่อเรา</a>
   <a class="menu" href="admin.php">⚙ สำหรับเจ้าหน้าที่</a>
 </aside>
 
@@ -509,6 +538,13 @@ input:focus{
 
 </main>
 </div>
+
+<footer class="site-footer">
+  <div class="site-footer-inner">
+    ออกแบบและพัฒนาระบบโดย
+    <b>งานศูนย์คอมพิวเตอร์ สำนักวิทยบริการและเทคโนโลยีสารสนเทศ มหาวิทยาลัยราชภัฏสุราษฎร์ธานี</b>
+  </div>
+</footer>
 
 <script>
 function tab(name){
