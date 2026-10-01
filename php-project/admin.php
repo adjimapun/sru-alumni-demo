@@ -63,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['payment_id'], $_POST[
 
     $paymentId = (int)$_POST['payment_id'];
     $decision = $_POST['decision'];
-    $note = trim($_POST['note'] ?? '');
+    $note = '';
 
     $pdo->beginTransaction();
 
@@ -196,6 +196,7 @@ $rows = $pdo->query(
 
 <table>
 <tr>
+  <th>ลำดับ</th>
   <th>เลขใบสมัคร</th>
   <th>ผู้สมัคร</th>
   <th>คณะ / สาขา</th>
@@ -205,8 +206,9 @@ $rows = $pdo->query(
   <th>ดำเนินการ</th>
 </tr>
 
-<?php foreach ($rows as $r): ?>
+<?php foreach ($rows as $index => $r): ?>
 <tr>
+  <td><?=h((string)($index + 1))?></td>
   <td>
     <?=h($r['application_no'])?>
     <?php if ($r['member_no']): ?><br><span class="badge ok"><?=h($r['member_no'])?></span><?php endif; ?>
@@ -240,7 +242,6 @@ $rows = $pdo->query(
       <form method="post" class="inline">
         <input type="hidden" name="csrf" value="<?=h(csrf_token())?>">
         <input type="hidden" name="payment_id" value="<?=h((string)$r['payment_id'])?>">
-        <input name="note" placeholder="หมายเหตุ">
         <button class="btn small" name="decision" value="approve">ยืนยัน / อนุมัติ</button>
         <button class="btn danger small" name="decision" value="invalid">หลักฐานไม่ถูกต้อง</button>
       </form>
