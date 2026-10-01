@@ -157,7 +157,7 @@ body{margin:0;background:#eaf4f8;font-family:'Kanit',sans-serif;color:#123b59}
   display:grid;place-items:center;
   background:#075b8f;color:white;
   font-size:17px;
-}
+}.icon svg{width:19px;height:19px;display:block;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 
 .info-row{
   display:grid;
@@ -257,14 +257,22 @@ body{margin:0;background:#eaf4f8;font-family:'Kanit',sans-serif;color:#123b59}
   <div class="content">
     <div>
       <div class="panel">
-        <h3><span class="icon">👤</span>ได้รับเงินจาก</h3>
+        <h3><span class="icon" aria-hidden="true">
+  <svg viewBox="0 0 24 24" focusable="false">
+    <path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm7 8a7 7 0 0 0-14 0"/>
+  </svg>
+</span>ได้รับเงินจาก</h3>
         <div class="info-row"><div class="label">ชื่อ-นามสกุล</div><div><?=h(trim($r['title_prefix'].' '.$r['full_name']))?></div></div>
         <div class="info-row"><div class="label">เลขที่สมาชิก</div><div><b><?=h($r['member_no'])?></b></div></div>
         <div class="info-row"><div class="label">ประเภทสมาชิก</div><div><?=h($memberTypeText)?></div></div>
       </div>
 
       <div class="panel" style="margin-top:16px">
-        <h3><span class="icon">🏦</span>ช่องทางการชำระเงิน</h3>
+        <h3><span class="icon" aria-hidden="true">
+  <svg viewBox="0 0 24 24" focusable="false">
+    <path d="M3 9h18M5 9v8m4-8v8m6-8v8m4-8v8M3 17h18M2 20h20M12 3l9 4H3l9-4Z"/>
+  </svg>
+</span>ช่องทางการชำระเงิน</h3>
         <div><b>ธนาคารกรุงไทย จำกัด (มหาชน) สาขาขุนทะเล</b></div>
         <div>ชื่อบัญชี : สมาคมศิษย์เก่ามหาวิทยาลัยราชภัฏสุราษฎร์ธานี</div>
         <div>เลขที่บัญชี : <b>664-3-78504-9</b></div>
