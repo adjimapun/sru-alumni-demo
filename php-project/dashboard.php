@@ -68,9 +68,7 @@ header small{display:block;opacity:.84}.demo{margin-left:auto;font-size:12px;bac
   <p class="note">เข้าสู่ระบบ: <?=h($maskedCitizen)?></p>
   <a class="menu on" href="dashboard.php">⌂ หน้าหลัก</a>
   <a class="menu" href="application.php">▤ ใบสมัครสมาชิก</a>
-  <a class="menu" href="track.php">◷ ติดตามสถานะ</a>
-  <a class="menu" href="training.php">▦ ประวัติพัฒนาศักยภาพ</a>
-  <a class="menu" href="logout.php">↪ ออกจากระบบ</a>
+  <a class="menu" href="track.php">◷ ติดตามสถานะ</a>  <a class="menu" href="logout.php">↪ ออกจากระบบ</a>
 </aside>
 
 <main class="content">
