@@ -192,16 +192,17 @@ header small{display:block;opacity:.84}
 .authHead{text-align:center;margin-bottom:22px}
 
 .authHead .icon{
-  width:70px;
-  height:70px;
-  border-radius:50%;
-  margin:auto;
-  background:#e8f6fb;
-  color:var(--p);
+  width:92px;
+  height:92px;
+  margin:0 auto 10px;
   display:grid;
   place-items:center;
-  font-size:30px;
-  font-weight:700;
+}
+.authHead .icon img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  display:block;
 }
 
 .authHead h2{margin-bottom:6px}
@@ -376,7 +377,12 @@ input:focus{
 <div class="auth">
 
   <div class="authHead">
-    <div class="icon">A</div>
+    <div class="icon">
+      <img
+        src="assets/alumni-logo.png"
+        alt="โลโก้สมาคมศิษย์เก่ามหาวิทยาลัยราชภัฏสุราษฎร์ธานี"
+      >
+    </div>
     <h2>บัญชีผู้ใช้งาน SRU Alumni</h2>
     <p class="note">เข้าสู่ระบบเพื่อสมัครสมาชิก ตรวจสอบสถานะ และใช้บริการสมาชิกศิษย์เก่า</p>
   </div>
