@@ -351,7 +351,7 @@ body{background:var(--bg)}
 <body>
 
 <header>
-  <div class="brand">SRU Alumni Admin</div>
+  <div class="brand">SRU Alumni Association Admin</div>
   <nav>
     <a href="admin_dashboard.php">แดชบอร์ด</a>
     <a href="admin.php">ใบสมัคร</a>
