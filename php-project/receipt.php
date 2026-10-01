@@ -227,7 +227,7 @@ body{margin:0;background:#eaf4f8;font-family:'Kanit',sans-serif;color:#123b59}
 
 <div class="page">
 <div class="toolbar">
-  <a class="btn alt" href="dashboard.php">กลับ Dashboard</a>
+  <a class="btn alt" href="dashboard.php">กลับหน้าหลัก</a>
   <button class="btn alt" onclick="window.print()">พิมพ์ / บันทึก PDF</button>
   <button class="btn" id="downloadBtn" onclick="downloadReceipt()">ดาวน์โหลดใบเสร็จเป็นรูปภาพ PNG</button>
 </div>
