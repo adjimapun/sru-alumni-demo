@@ -47,6 +47,9 @@ if (!current_admin()) {
           <label>Password<input name="password" type="password" required></label>
           <button class="btn">เข้าสู่ระบบ</button>
         </form>
+        <div class="actions" style="margin-top:14px">
+          <a class="btn alt" href="index.php">← กลับหน้าหลักของระบบ</a>
+        </div>
       </div>
     </main>
     </body>
@@ -173,6 +176,7 @@ $rows = $pdo->query(
 <header>
   <div class="brand">SRU Alumni Admin</div>
   <nav>
+    <a href="index.php">หน้าหลักของระบบ</a>
     <a href="admin.php">ใบสมัคร</a>
     <a href="admin_master.php">ข้อมูลคณะ / ประเภทสมาชิก</a>
     <a href="admin.php?logout=1">ออกจากระบบ</a>
