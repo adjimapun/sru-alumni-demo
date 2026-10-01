@@ -252,7 +252,7 @@ header small{
 <div class="shell">
 
 <aside class="side">
-  <div class="side-title">SRU Alumni Digital Service</div>
+  <div class="side-title">SRU Alumni Association Digital Service</div>
   <p class="note">ช่องทางบริการและติดต่อสอบถาม</p>
 
   <a class="menu" href="index.php">⌂ หน้าหลัก</a>
