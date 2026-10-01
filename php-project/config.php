@@ -2,22 +2,73 @@
 declare(strict_types=1);
 session_start();
 
-const DB_HOST = '127.0.0.1';
-const DB_NAME = 'sru_alumni';
-const DB_USER = 'root';
-const DB_PASS = '';
+$localDbConfig = [];
+$localDbFile = __DIR__.'/config.local.php';
+
+if (is_file($localDbFile)) {
+    $loadedConfig = require $localDbFile;
+    if (is_array($loadedConfig)) {
+        $localDbConfig = $loadedConfig;
+    }
+}
+
+$dbHostEnv = getenv('SRU_DB_HOST');
+$dbNameEnv = getenv('SRU_DB_NAME');
+$dbUserEnv = getenv('SRU_DB_USER');
+$dbPassEnv = getenv('SRU_DB_PASS');
+
+define('DB_HOST', (string)($localDbConfig['host'] ?? ($dbHostEnv !== false && $dbHostEnv !== '' ? $dbHostEnv : '127.0.0.1')));
+define('DB_NAME', (string)($localDbConfig['name'] ?? ($dbNameEnv !== false && $dbNameEnv !== '' ? $dbNameEnv : 'sru_alumni')));
+define('DB_USER', (string)($localDbConfig['user'] ?? ($dbUserEnv !== false && $dbUserEnv !== '' ? $dbUserEnv : 'root')));
+define('DB_PASS', (string)($localDbConfig['pass'] ?? ($dbPassEnv !== false ? $dbPassEnv : '')));
 const MAX_UPLOAD_BYTES = 5 * 1024 * 1024;
 
 function db(): PDO {
     static $pdo = null;
-    if ($pdo instanceof PDO) return $pdo;
+
+    if ($pdo instanceof PDO) {
+        return $pdo;
+    }
+
     $dsn = 'mysql:host='.DB_HOST.';dbname='.DB_NAME.';charset=utf8mb4';
-    $pdo = new PDO($dsn, DB_USER, DB_PASS, [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-        PDO::ATTR_EMULATE_PREPARES => false,
-    ]);
-    return $pdo;
+
+    try {
+        $pdo = new PDO($dsn, DB_USER, DB_PASS, [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+            PDO::ATTR_EMULATE_PREPARES => false,
+            PDO::ATTR_TIMEOUT => 5,
+        ]);
+
+        return $pdo;
+    } catch (PDOException $e) {
+        error_log('Database connection failed: '.$e->getMessage());
+        throw new RuntimeException('ไม่สามารถเชื่อมต่อฐานข้อมูลได้ กรุณาตรวจสอบค่าการเชื่อมต่อหรือสถานะของเซิร์ฟเวอร์ฐานข้อมูล', 0, $e);
+    }
+}
+
+function db_connection_status(): array {
+    try {
+        $pdo = db();
+        $ok = (int)$pdo->query('SELECT 1')->fetchColumn() === 1;
+
+        if ($ok) {
+            return [
+                'ok' => true,
+                'message' => 'เชื่อมต่อฐานข้อมูลสำเร็จ',
+            ];
+        }
+
+        return [
+            'ok' => false,
+            'message' => 'เชื่อมต่อฐานข้อมูลไม่สำเร็จ',
+        ];
+    } catch (Throwable $e) {
+        return [
+            'ok' => false,
+            'message' => 'เชื่อมต่อฐานข้อมูลไม่สำเร็จ',
+        ];
+    }
 }
 function h(?string $v): string { return htmlspecialchars($v ?? '', ENT_QUOTES, 'UTF-8'); }
 function csrf_token(): string {
