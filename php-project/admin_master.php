@@ -67,7 +67,13 @@ $memberTypes = $pdo->query('SELECT * FROM member_types ORDER BY id')->fetchAll()
 <body>
 <header>
   <div class="brand">SRU Alumni Admin</div>
-  <nav><a href="admin.php">ใบสมัคร</a><a href="admin_master.php">ข้อมูลหลัก</a><a href="admin.php?logout=1">ออกจากระบบ</a></nav>
+  <nav>
+    <a href="admin_dashboard.php">แดชบอร์ด</a>
+    <a href="admin.php">ใบสมัคร</a>
+    <a href="admin_master.php">ข้อมูลหลัก</a>
+    <a href="index.php">หน้าหลักของระบบ</a>
+    <a href="admin.php?logout=1">ออกจากระบบ</a>
+  </nav>
 </header>
 
 <main class="container">
