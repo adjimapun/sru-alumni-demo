@@ -280,7 +280,7 @@ $mustUploadSlip = !$latestPayment || ($latestPayment['status'] ?? '') === 'inval
 <header>
   <div class="brand">SRU Alumni</div>
   <nav>
-    <a href="dashboard.php">Dashboard</a>
+    <a href="dashboard.php">หน้าหลัก</a>
     <a href="track.php">ติดตามสถานะ</a>
   </nav>
 </header>
