@@ -128,15 +128,6 @@ header{
 }
 
 header small{display:block;opacity:.84}
-.demo{
-  margin-left:auto;
-  font-size:12px;
-  background:#ffffff22;
-  padding:7px 11px;
-  border-radius:18px;
-  white-space:nowrap;
-}
-
 .shell{
   display:grid;
   grid-template-columns:230px 1fr;
@@ -362,7 +353,6 @@ input:focus{
   header{padding:13px 16px}
   header b{font-size:14px}
   header small{font-size:11px}
-  .demo{display:none}
   .crest{width:52px;height:52px}
   .shell{padding:0 12px;margin:14px auto}
   .hero,.card{padding:20px}
@@ -377,7 +367,6 @@ input:focus{
     <b>สมาคมศิษย์เก่ามหาวิทยาลัยราชภัฏสุราษฎร์ธานี</b>
     <small>Suratthani Rajabhat University Alumni Association</small>
   </div>
-  <span class="demo">PHP + DATABASE</span>
 </header>
 
 <div class="shell">
@@ -388,9 +377,7 @@ input:focus{
   <a class="menu on" href="index.php">⌂ หน้าหลัก</a>
   <a
     class="menu"
-    href="https://my.sru.ac.th/reg/portal/contact.php"
-    target="_blank"
-    rel="noopener noreferrer"
+    href="contact.php"
   >☎ ติดต่อเรา</a>
   <a class="menu" href="admin.php">⚙ สำหรับเจ้าหน้าที่</a>
 </aside>
