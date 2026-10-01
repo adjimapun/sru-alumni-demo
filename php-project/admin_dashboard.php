@@ -365,7 +365,7 @@ body{background:var(--bg)}
 
 <div class="dash-head">
   <div>
-    <h1>Dashboard การรับสมัครสมาชิกศิษย์เก่า</h1>
+    <h1>Dashboard การรับสมัครสมาชิกสมาคมศิษย์เก่า</h1>
     <div class="subtle">
       ภาพรวมสำหรับผู้บริหาร · ปี <?=h((string)($selectedYear+543))?> · <?=h($selectedFacultyName)?>
     </div>
