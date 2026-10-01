@@ -116,13 +116,15 @@ header{
 .crest{
   width:58px;
   height:58px;
-  border-radius:12px;
-  background:#fff;
-  color:var(--p);
   display:grid;
   place-items:center;
-  font-weight:700;
   flex:0 0 auto;
+}
+.crest img{
+  width:58px;
+  height:58px;
+  object-fit:contain;
+  display:block;
 }
 
 header small{display:block;opacity:.84}
@@ -344,7 +346,7 @@ input:focus{
 <body>
 
 <header>
-  <div class="crest">ศ.มรส.</div>
+  <div class="crest"><img src="assets/alumni-logo.jpg" alt="โลโก้สมาคมศิษย์เก่ามหาวิทยาลัยราชภัฏสุราษฎร์ธานี"></div>
   <div>
     <b>สมาคมศิษย์เก่ามหาวิทยาลัยราชภัฏสุราษฎร์ธานี</b>
     <small>Suratthani Rajabhat University Alumni Association</small>
