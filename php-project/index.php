@@ -391,7 +391,26 @@ input:focus{
   <a
     class="menu"
     href="contact.php"
-  >☎ ติดต่อเรา</a>
+  >
+    <svg class="menu-icon" viewBox="0 0 24 24" aria-hidden="true">
+      <path
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.9"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M21 11.5a8.4 8.4 0 0 1-8.8 8.5 9.6 9.6 0 0 1-4.1-.9L3 20.5l1.5-4.7A8.3 8.3 0 0 1 3 11.1a8.5 8.5 0 0 1 9-8.1 8.5 8.5 0 0 1 9 8.5Z"
+      />
+      <path
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.9"
+        stroke-linecap="round"
+        d="M8.5 10.7h7M8.5 14h4.5"
+      />
+    </svg>
+    <span>ติดต่อเรา</span>
+  </a>
   <a class="menu" href="admin.php">⚙ สำหรับเจ้าหน้าที่</a>
 </aside>
 
