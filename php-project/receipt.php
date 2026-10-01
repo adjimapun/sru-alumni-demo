@@ -101,16 +101,17 @@ body{margin:0;background:#eaf4f8;font-family:'Kanit',sans-serif;color:#123b59}
 }
 
 .emblem{
-  width:115px;height:135px;
-  border:3px solid #0c496d;
-  border-radius:20px 20px 42px 42px;
+  width:135px;
+  height:145px;
   display:grid;
   place-items:center;
-  font-weight:700;
-  text-align:center;
-  color:#0c496d;
-  background:#fff;
-  line-height:1.15;
+  background:transparent;
+}
+.emblem img{
+  max-width:132px;
+  max-height:140px;
+  object-fit:contain;
+  display:block;
 }
 
 .assoc h1{font-size:32px;margin:0;color:#073f65}
@@ -216,7 +217,7 @@ body{margin:0;background:#eaf4f8;font-family:'Kanit',sans-serif;color:#123b59}
 .system-note{text-align:center;font-size:12px;color:#7691a0;margin-top:10px}
 
 @media(max-width:850px){
-  .top{grid-template-columns:90px 1fr}.emblem{width:84px;height:100px;font-size:12px}.doc-meta{grid-column:1/-1;text-align:left}
+  .top{grid-template-columns:100px 1fr}.emblem{width:96px;height:105px}.emblem img{max-width:94px;max-height:102px}.doc-meta{grid-column:1/-1;text-align:left}
   .content{grid-template-columns:1fr}.title{width:100%}.assoc h1{font-size:24px}.receipt-card{padding:28px 20px}.info-row{grid-template-columns:130px 1fr}
 }
 @media print{
@@ -235,7 +236,9 @@ body{margin:0;background:#eaf4f8;font-family:'Kanit',sans-serif;color:#123b59}
 
 <div id="receiptCard" class="receipt-card">
   <div class="top">
-    <div class="emblem">สมาคม<br>ศิษย์เก่า<br>ศ.มรส.</div>
+    <div class="emblem">
+      <img src="assets/alumni-logo.jpg" alt="โลโก้สมาคมศิษย์เก่ามหาวิทยาลัยราชภัฏสุราษฎร์ธานี">
+    </div>
 
     <div class="assoc">
       <h1>สมาคมศิษย์เก่า<br>มหาวิทยาลัยราชภัฏสุราษฎร์ธานี</h1>
