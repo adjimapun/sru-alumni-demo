@@ -130,8 +130,8 @@ header small{
 
 .contact-grid{
   display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:16px;
+  grid-template-columns:1fr;
+  gap:18px;
 }
 
 .contact-box{
@@ -145,6 +145,78 @@ header small{
   margin:0 0 14px;
   color:var(--p);
   font-size:19px;
+}
+
+.contact-box.featured{
+  position:relative;
+  overflow:hidden;
+  border:2px solid #0a8fa9;
+  background:linear-gradient(135deg,#f0fbff,#ffffff 58%,#eef9fb);
+  padding:26px;
+  box-shadow:0 14px 34px #075b8f20;
+}
+
+.contact-box.featured::before{
+  content:"ช่องทางหลัก";
+  position:absolute;
+  top:16px;
+  right:16px;
+  background:linear-gradient(120deg,#075b8f,#0a8fa9);
+  color:#fff;
+  border-radius:999px;
+  padding:6px 12px;
+  font-size:12px;
+  font-weight:600;
+}
+
+.contact-box.featured h2{
+  margin:0 110px 16px 0;
+  font-size:23px;
+  color:#064c78;
+}
+
+.contact-box.secondary{
+  max-width:820px;
+}
+
+.contact-subtitle{
+  color:#526c7f;
+  margin:-4px 0 18px;
+  font-size:13px;
+}
+
+.line-contact{
+  display:flex;
+  align-items:center;
+  gap:18px;
+  margin-top:16px;
+  padding:16px;
+  border:1px solid #dbeaf0;
+  background:#fff;
+  border-radius:14px;
+}
+
+.line-qr{
+  width:142px;
+  height:142px;
+  object-fit:contain;
+  border:1px solid #e2e8ec;
+  border-radius:12px;
+  padding:6px;
+  background:#fff;
+}
+
+.line-title{
+  font-size:18px;
+  font-weight:600;
+  color:var(--p);
+  margin-bottom:4px;
+}
+
+.line-id{
+  color:#526c7f;
+  font-size:13px;
+  margin-top:5px;
 }
 
 .info-row{
@@ -234,6 +306,11 @@ header small{
   .shell{padding:0 12px;margin:14px auto}
   .hero,.card{padding:20px}
   .info-row{grid-template-columns:1fr;gap:2px}
+  .contact-box.featured{padding:20px}
+  .contact-box.featured h2{margin-right:0;padding-top:34px;font-size:20px}
+  .contact-box.featured::before{left:20px;right:auto;top:16px}
+  .line-contact{flex-direction:column;text-align:center}
+  .line-qr{width:160px;height:160px}
 }
 </style>
 </head>
@@ -271,84 +348,75 @@ header small{
 
     <div class="contact-grid">
 
-      <div class="contact-box">
-        <h2>มหาวิทยาลัยราชภัฏสุราษฎร์ธานี</h2>
-
-        <div class="info-row">
-          <div class="label">ที่อยู่</div>
-          <div>
-            272 หมู่ 9 ถนนสุราษฎร์-นาสาร ตำบลขุนทะเล
-            อำเภอเมือง จังหวัดสุราษฎร์ธานี 84100
-          </div>
-        </div>
-
-        <div class="info-row">
-          <div class="label">โทรศัพท์</div>
-          <div>
-            <a class="link" href="tel:077913333">077-913333</a>
-          </div>
-        </div>
-
-        <div class="info-row">
-          <div class="label">อีเมล</div>
-          <div>
-            <a class="link" href="mailto:saraban@sru.ac.th">saraban@sru.ac.th</a>
-          </div>
-        </div>
-
-        <div class="actions">
-          <a class="btn alt" href="https://www.sru.ac.th" target="_blank" rel="noopener noreferrer">
-            เว็บไซต์มหาวิทยาลัย
-          </a>
-        </div>
-      </div>
-
-      <div class="contact-box">
-        <h2>สอบถามปัญหาการใช้งานระบบ</h2>
+      <div class="contact-box featured">
+        <h2>สำหรับการติดต่อเกี่ยวการรับสมัครสมาชิกสมาคมศิษย์เก่า</h2>
+        <p class="contact-subtitle">
+          ช่องทางสำหรับสอบถามข้อมูลการสมัครสมาชิก เอกสารประกอบ และสถานะที่เกี่ยวข้องกับการรับสมัครสมาชิกสมาคมศิษย์เก่า
+        </p>
 
         <div class="info-row">
           <div class="label">หน่วยงาน</div>
-          <div>
-            งานศูนย์คอมพิวเตอร์
-            สำนักวิทยบริการและเทคโนโลยีสารสนเทศ
-          </div>
+          <div><b>กองพัฒนานักศึกษา สำนักงานอธิการบดี</b></div>
         </div>
 
         <div class="info-row">
           <div class="label">สถานที่</div>
+          <div>...</div>
+        </div>
+
+        <div class="info-row">
+          <div class="label">โทรศัพท์</div>
+          <div>...</div>
+        </div>
+
+        <div class="info-row">
+          <div class="label">ผู้ประสานงาน</div>
+          <div>...</div>
+        </div>
+      </div>
+
+      <div class="contact-box secondary">
+        <h2>สอบถามปัญหาการใช้งานระบบ</h2>
+        <p class="contact-subtitle">
+          สำหรับปัญหาด้านการเข้าใช้งานระบบ การแสดงผล หรือข้อขัดข้องทางเทคนิค
+        </p>
+
+        <div class="info-row">
+          <div class="label">หน่วยงาน</div>
           <div>
-            ชั้น 1 อาคารทีปังกรรัศมีโชติ
-            มหาวิทยาลัยราชภัฏสุราษฎร์ธานี
+            งานศูนย์คอมพิวเตอร์ สำนักวิทยบริการและเทคโนโลยีสารสนเทศ
           </div>
         </div>
 
         <div class="info-row">
           <div class="label">โทรศัพท์</div>
           <div>
-            <a class="link" href="tel:077913330">077-913330</a>
+            <a class="link" href="tel:077913333">077-913333</a> ต่อ 5118
           </div>
         </div>
 
-        <div class="info-row">
-          <div class="label">อีเมล</div>
+        <div class="line-contact">
+          <img
+            class="line-qr"
+            src="https://quickchart.io/qr?text=https%3A%2F%2Fline.me%2FR%2Fti%2Fp%2F%40626ogasn&size=240"
+            alt="QR Code LINE OA SRU360"
+          >
+
           <div>
-            <a class="link" href="mailto:arit@sru.ac.th">arit@sru.ac.th</a>
+            <div class="line-title">LINE OA : SRU360</div>
+            <div>
+              <a
+                class="link"
+                href="https://line.me/R/ti/p/@626ogasn"
+                target="_blank"
+                rel="noopener noreferrer"
+              >เพิ่มเพื่อน LINE OA SRU360</a>
+            </div>
+            <div class="line-id">ID : @626ogansn</div>
           </div>
-        </div>
-
-        <div class="actions">
-          <a class="btn alt" href="https://arit.sru.ac.th/computer-center/" target="_blank" rel="noopener noreferrer">
-            เว็บไซต์ศูนย์คอมพิวเตอร์
-          </a>
         </div>
       </div>
 
-    </div>
-
-    <div class="support">
-      <b>สำหรับการติดต่อเกี่ยวกับระบบรับสมัครสมาชิกสมาคมศิษย์เก่า</b><br>
-      กรุณาแจ้งชื่อ-นามสกุล เลขที่ใบสมัคร (ถ้ามี) และรายละเอียดปัญหา
-      เพื่อให้เจ้าหน้าที่ตรวจสอบได้รวดเร็วยิ่งขึ้น
     </div>
 
     <div class="actions">
