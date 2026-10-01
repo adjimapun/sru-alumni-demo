@@ -70,13 +70,26 @@ $memberTypes = $pdo->query('SELECT * FROM member_types ORDER BY id')->fetchAll()
   <nav>
     <a href="admin_dashboard.php">แดชบอร์ด</a>
     <a href="admin.php">ใบสมัคร</a>
-    <a href="admin_master.php">ข้อมูลหลัก</a>
+
+    <span class="nav-settings">
+      <a href="admin_settings.php">ตั้งค่า ▾</a>
+      <span class="nav-submenu">
+        <a href="admin_receipt_settings.php">ผู้รับเงิน / ลายเซ็นใบเสร็จ</a>
+        <a href="admin_master.php">คณะ / ประเภทสมาชิก</a>
+        <a href="admin_users.php">ผู้ดูแลระบบหลังบ้าน</a>
+      </span>
+    </span>
+
     <a href="index.php">หน้าหลักของระบบ</a>
     <a href="admin.php?logout=1">ออกจากระบบ</a>
   </nav>
 </header>
 
 <main class="container">
+<div class="actions" style="margin-bottom:14px">
+  <a class="btn alt" href="admin_settings.php">← กลับเมนูตั้งค่า</a>
+</div>
+<div class="note" style="margin-bottom:10px">ตั้งค่า → คณะ / ประเภทสมาชิก</div>
 <?php if ($error): ?><div class="alert danger"><?=h($error)?></div><?php endif; ?>
 <?php if ($success): ?><div class="alert ok"><?=h($success)?></div><?php endif; ?>
 
