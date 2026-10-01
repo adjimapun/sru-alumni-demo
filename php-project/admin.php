@@ -23,7 +23,7 @@ if (!current_admin()) {
         if ($a && password_verify($_POST['password'] ?? '', $a['password_hash'])) {
             session_regenerate_id(true);
             $_SESSION['admin_id'] = $a['id'];
-            header('Location: admin.php');
+            header('Location: admin_dashboard.php');
             exit;
         }
 
@@ -511,9 +511,10 @@ function admin_status_class(string $status): string
 <header>
   <div class="brand">SRU Alumni Admin</div>
   <nav>
-    <a href="index.php">หน้าหลักของระบบ</a>
+    <a href="admin_dashboard.php">แดชบอร์ด</a>
     <a href="admin.php">ใบสมัคร</a>
     <a href="admin_master.php">ข้อมูลคณะ / ประเภทสมาชิก</a>
+    <a href="index.php">หน้าหลักของระบบ</a>
     <a href="admin.php?logout=1">ออกจากระบบ</a>
   </nav>
 </header>
