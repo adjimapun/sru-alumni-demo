@@ -564,6 +564,7 @@ function admin_status_class(string $status): string
       <a href="admin_settings.php">ตั้งค่า ▾</a>
       <span class="nav-submenu">
         <a href="admin_receipt_settings.php">ผู้รับเงิน / ลายเซ็นใบเสร็จ</a>
+        <a href="admin_member_card_settings.php">บัตรสมาชิก / ลายเซ็นนายกสมาคม</a>
         <a href="admin_master.php">คณะ / ประเภทสมาชิก</a>
         <a href="admin_users.php">ผู้ดูแลระบบหลังบ้าน</a>
       </span>
