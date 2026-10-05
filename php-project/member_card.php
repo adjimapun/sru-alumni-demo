@@ -5,6 +5,7 @@ $u = require_login();
 $pdo = db();
 $error = '';
 $success = '';
+$newPhoto = null;
 
 function load_member_card(PDO $pdo, int $userId): ?array {
     $st = $pdo->prepare(
@@ -69,6 +70,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $member = load_member_card($pdo, (int)$u['id']);
 
     } catch (Throwable $e) {
+        if ($newPhoto) {
+            delete_managed_upload($newPhoto, 'member_photo_');
+            $newPhoto = null;
+        }
         $error = safe_error_message($e);
     }
 }
