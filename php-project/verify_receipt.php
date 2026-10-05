@@ -1,5 +1,6 @@
 <?php
 require __DIR__.'/config.php';
+header('X-Robots-Tag: noindex, nofollow, noarchive');
 
 $code = strtolower(trim($_GET['code'] ?? ''));
 $receipt = null;
