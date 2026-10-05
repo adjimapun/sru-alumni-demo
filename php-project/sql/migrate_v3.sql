@@ -1,7 +1,6 @@
 -- Migration V3: รองรับอนุมัติหลายรายการและยกเลิกการอนุมัติสมาชิก
+-- รันบน Database ของระบบที่เลือกอยู่เท่านั้น (ไม่มี USE แบบ hard-code)
 -- รันไฟล์นี้ครั้งเดียว หลังจาก migrate_v2.sql
-USE sru_alumni;
-
 ALTER TABLE members
   ADD COLUMN status VARCHAR(20) NOT NULL DEFAULT 'active' AFTER member_no,
   ADD COLUMN cancelled_at DATETIME NULL AFTER approved_at,
