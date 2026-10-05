@@ -1,92 +1,167 @@
-# SRU Alumni Membership — PHP + MariaDB/MySQL
+# SRU Alumni Association Membership System
 
-ระบบรับสมัครสมาชิกสมาคมศิษย์เก่ามหาวิทยาลัยราชภัฏสุราษฎร์ธานี
+ระบบรับสมัครและบริหารสมาชิกสมาคมศิษย์เก่ามหาวิทยาลัยราชภัฏสุราษฎร์ธานี  
+PHP 8.x + MariaDB/MySQL + PDO
 
-## ความสามารถล่าสุด
-- สมัครบัญชีด้วยเลขบัตรประชาชน 13 หลัก + เบอร์โทรศัพท์มือถือ
-- Username = เลขบัตรประชาชน
-- Password เริ่มต้น = เบอร์โทรศัพท์มือถือ และจัดเก็บด้วย password_hash()
-- ใบสมัครสมาชิกแบบหน้าเดียว
-- เพิ่มคำนำหน้าชื่อ
-- ตัดช่อง "รุ่น" ออกจากแบบฟอร์ม
-- คณะเป็น Combo box จากตาราง faculties
-- Admin เพิ่ม/เปิด/ปิดข้อมูลคณะได้จาก admin_master.php
-- แยกช่อง "สาขา" ออกจากคณะ
-- ประเภทสมาชิกเป็น Master Data และ Admin เพิ่ม/เปิด/ปิดได้
-- สมาชิกประเภทอื่น ๆ สามารถระบุรายละเอียดเพิ่มเติมได้
-- ช่องทางชำระเงินกำหนดตายตัวเป็น "โอนผ่านบัญชีธนาคาร" ทั้งหน้าแบบฟอร์มและฝั่ง Server
-- แนบสลิป JPG/PNG/PDF
-- เจ้าหน้าที่ตรวจสลิปและอนุมัติ
-- เลขสมาชิก ALUMNI-xxxxxx ออกตามลำดับการอนุมัติการชำระเงิน
-- เมื่ออนุมัติ ระบบออกใบเสร็จอิเล็กทรอนิกส์อัตโนมัติ
-- ใบเสร็จมี QR Code สำหรับตรวจสอบความถูกต้อง
-- ผู้ใช้ดาวน์โหลดใบเสร็จเป็น PNG ได้ และ Print/Save as PDF ได้
-- ประวัติการอบรมและพัฒนาศักยภาพ + แนบเกียรติบัตร
-- ใช้ Font Kanit
-- PDO Prepared Statements + CSRF + password_hash/password_verify
+## ความสามารถหลัก
 
-## ติดตั้งฐานข้อมูลใหม่
-1. คัดลอกโฟลเดอร์ php-project ไปไว้ที่ C:\xampp\htdocs\sru_alumni
-2. เปิด Apache และ MySQL
-3. Import ไฟล์ sql/sru_alumni.sql ผ่าน phpMyAdmin
-4. แก้ config.php หาก DB Username/Password แตกต่างจากค่าเริ่มต้น
-5. เปิด http://localhost/sru_alumni/
-6. สร้าง Admin ครั้งแรกที่ http://localhost/sru_alumni/create_admin.php
-7. หลังสร้าง Admin ให้ลบหรือเปลี่ยนชื่อ create_admin.php
-8. เข้า Admin ที่ http://localhost/sru_alumni/admin.php
-9. เพิ่มข้อมูลคณะได้ที่ http://localhost/sru_alumni/admin_master.php
+- สมัครบัญชีด้วยเลขบัตรประชาชนและหมายเลขโทรศัพท์
+- ผู้สมัครกำหนดรหัสผ่านของตนเอง
+- บัญชีเดิมที่เคยใช้เบอร์โทรศัพท์เป็นรหัสผ่านจะถูกบังคับให้เปลี่ยนรหัสผ่านหลัง Migration V6
+- ใบสมัครสมาชิกออนไลน์และแนบหลักฐานการชำระเงิน
+- อนุมัติการชำระเงินและออกเลขสมาชิกอัตโนมัติ
+- เลขสมาชิกใหม่รูปแบบปี พ.ศ. 2 หลัก + running 4 หลัก เช่น `690001`
+- ใบเสร็จอิเล็กทรอนิกส์พร้อม QR ตรวจสอบ
+- บัตรสมาชิกดิจิทัลพร้อม QR ตรวจสอบด้วย token แบบสุ่ม
+- สมาชิกอัปโหลด/เปลี่ยนรูปถ่ายบัตรสมาชิกได้
+- ตั้งค่าลายเซ็นผู้รับเงินและลายเซ็นนายกสมาคม
+- Dashboard เจ้าหน้าที่และการจัดการ Master Data
+- PDO Prepared Statements, CSRF, password_hash/password_verify, Login Rate Limit
+- Secure Session Cookies, Security Headers และ File Upload Validation
 
-## กรณีมีฐานข้อมูลเวอร์ชันเดิม
-ให้ Backup ฐานข้อมูลก่อน แล้ว Import:
-sql/migrate_v2.sql
+## การติดตั้งฐานข้อมูลใหม่
 
-Migration จะเพิ่มตาราง faculties, member_types และคอลัมน์ใหม่ โดยเก็บคอลัมน์เก่า generation / faculty_major / member_type ไว้เพื่อไม่ทำลายข้อมูลย้อนหลัง แต่โค้ดใหม่จะไม่ใช้งานคอลัมน์ดังกล่าว
+Import:
 
-## การดาวน์โหลดใบเสร็จเป็นรูปภาพ
-receipt.php ใช้ html2canvas ผ่าน CDN เพื่อสร้าง PNG ใน Browser และใช้ QRCode.js เพื่อสร้าง QR ตรวจสอบใบเสร็จ
-
-หากระบบ Production ต้องทำงานในเครือข่ายปิด แนะนำดาวน์โหลด JavaScript libraries เหล่านี้มาเก็บไว้ใน Server เองแทน CDN
-
-## Production
-ควรเปิด HTTPS, ใช้ DB User เฉพาะระบบ, ทำ Backup, จำกัดสิทธิ์โฟลเดอร์ uploads, เปิด Secure/HttpOnly/SameSite Cookie, เพิ่ม Rate Limit/OTP/Reset Password และจัดทำนโยบาย Retention/Access Control ให้สอดคล้องกับ PDPA
-
-
-## Migration V3 — อนุมัติหลายรายการ / ยกเลิกการอนุมัติ
-หากฐานข้อมูลถูกสร้างก่อนเพิ่มฟังก์ชันอนุมัติหลายรายการและยกเลิกการอนุมัติ ให้ Backup ฐานข้อมูลก่อน แล้ว Import:
-
-sql/migrate_v3.sql
-
-การยกเลิกการอนุมัติจะไม่ลบเลขสมาชิกหรือใบเสร็จออกจากประวัติ แต่จะเปลี่ยนสถานะเป็น cancelled และนำใบสมัครกลับไปสถานะรอตรวจสอบหลักฐาน หากอนุมัติใบสมัครเดิมอีกครั้ง ระบบจะใช้เลขสมาชิกเดิมเพื่อป้องกันเลขซ้ำและรักษาประวัติการอนุมัติ
-
-
-## Migration V4 — ตั้งค่าใบเสร็จและผู้ดูแลระบบหลังบ้าน
-สำหรับฐานข้อมูลเดิม ให้ Backup ฐานข้อมูลก่อน แล้ว Import:
-
-`sql/migrate_v4.sql`
-
-V4 เพิ่ม:
-- ตั้งชื่อผู้รับเงินและตำแหน่งในใบเสร็จ
-- อัปโหลดลายเซ็น PNG/JPG สำหรับใบเสร็จอิเล็กทรอนิกส์
-- เมนูตั้งค่ากลางของระบบหลังบ้าน
-- เพิ่ม/เปิด-ปิดบัญชีผู้ดูแลระบบ และกำหนดรหัสผ่านใหม่
-
-
-## Digital Member Card (V5)
-
-ระบบบัตรสมาชิกดิจิทัลเพิ่มความสามารถดังนี้
-
-- ออกเลขสมาชิกหลังอนุมัติการชำระเงิน รูปแบบปี พ.ศ. 2 หลัก + running 4 หลัก เช่น `690001`
-- สมาชิกอัปโหลด/เปลี่ยนรูปถ่ายสำหรับบัตรสมาชิกได้
-- ดาวน์โหลดบัตรสมาชิกเป็น PNG และพิมพ์/บันทึก PDF ได้
-- QR Code บนบัตรใช้ตรวจสอบสถานะสมาชิกผ่าน `verify_member.php`
-- ผู้ดูแลระบบตั้งค่าชื่อ ตำแหน่ง และลายเซ็นนายกสมาคมผ่าน `admin_member_card_settings.php`
-
-### อัปเกรดฐานข้อมูลเดิม
-
-สำรองฐานข้อมูลก่อน แล้วรันไฟล์ต่อไปนี้เพียงครั้งเดียวหลัง V4:
-
-```sql
-php-project/sql/migrate_v5.sql
+```text
+sql/sru_alumni.sql
 ```
 
-สมาชิกเดิมจะเก็บเลขสมาชิกเดิมไว้ ส่วนสมาชิกที่อนุมัติใหม่หลัง V5 จะใช้เลขสมาชิกแบบใหม่
+ไฟล์ schema ใหม่รวมโครงสร้างถึง V6 แล้ว ไม่ต้องรัน migrate_v2-v6 ซ้ำสำหรับฐานข้อมูลที่สร้างใหม่จากไฟล์นี้
+
+## การอัปเกรดฐานข้อมูลเดิม
+
+สำรองฐานข้อมูลก่อนทุกครั้ง และรัน Migration ตามลำดับที่ฐานข้อมูลยังขาด
+
+```text
+sql/migrate_v2.sql
+sql/migrate_v3.sql
+sql/migrate_v4.sql
+sql/migrate_v5.sql
+sql/migrate_v6.sql
+```
+
+หากฐานข้อมูลปัจจุบันถึง V5 แล้ว ให้รันเฉพาะ `migrate_v6.sql` เพียงครั้งเดียว
+
+### V6 เพิ่ม
+
+- `users.must_change_password`
+- `members.verification_code` แบบสุ่ม 32 ตัวอักษร
+- ตาราง `auth_attempts` สำหรับ Login Rate Limit
+- สมาชิกเดิมถูกกำหนดให้เปลี่ยนรหัสผ่านหลังเข้าสู่ระบบครั้งแรก
+
+## ตั้งค่าฐานข้อมูล Production
+
+อย่าใส่รหัสผ่านจริงใน GitHub ให้สร้างไฟล์:
+
+```text
+config.local.php
+```
+
+จาก `config.local.example.php` แล้วกำหนดค่าเฉพาะบน Server
+
+แนะนำ permission:
+
+```bash
+chmod 640 config.local.php
+chmod 750 uploads
+```
+
+Runtime DB user ควรมีเฉพาะสิทธิ์ที่ระบบต้องใช้ เช่น SELECT, INSERT, UPDATE, DELETE  
+การ ALTER/CREATE ตารางควรใช้บัญชีสำหรับ Migration แยกต่างหาก
+
+## Environment Variables สำหรับ Production
+
+แนะนำ:
+
+```text
+SRU_APP_ENV=production
+SRU_FORCE_HTTPS=1
+SRU_PUBLIC_BASE_URL=https://ชื่อโดเมนจริง
+SRU_ALLOW_ADMIN_BOOTSTRAP=0
+```
+
+ถ้า Hestia/Nginx ทำ Reverse Proxy และส่ง `X-Forwarded-Proto` ที่เชื่อถือได้:
+
+```text
+SRU_TRUST_PROXY=1
+```
+
+### การสร้าง Admin ครั้งแรก
+
+หน้า `create_admin.php` ถูกปิดเป็นค่าเริ่มต้น
+
+ให้เปิดชั่วคราวด้วย:
+
+```text
+SRU_ALLOW_ADMIN_BOOTSTRAP=1
+SRU_ADMIN_BOOTSTRAP_TOKEN=<สุ่มอย่างน้อย 24 ตัวอักษร>
+```
+
+สร้าง Admin เสร็จแล้วต้องปิด `SRU_ALLOW_ADMIN_BOOTSTRAP` และลบ Bootstrap Token ออกจาก Environment ทันที
+
+## Web Server Security
+
+Apache ใช้:
+- `.htaccess`
+- `uploads/.htaccess`
+- `sql/.htaccess`
+- `.user.ini`
+
+สำหรับ HestiaCP/Nginx ให้เพิ่มกฎจาก:
+
+```text
+../deploy/nginx-production.conf
+```
+
+โดยปรับ path `/php-project/` ให้ตรงกับ URL จริงของเว็บไซต์ แล้ว Reload Nginx
+
+ไฟล์ SQL, config, README และไฟล์ script ใน uploads ต้องไม่สามารถเปิดผ่าน Web ได้
+
+## HTTPS / Session
+
+ระบบรองรับ:
+- Secure Cookie เมื่อ HTTPS
+- HttpOnly
+- SameSite=Lax
+- Strict Session Mode
+- Session ID Rotation
+- Session Idle Timeout 2 ชั่วโมง
+- HSTS เมื่อทำงานผ่าน HTTPS
+- CSP / X-Frame-Options / nosniff / Referrer-Policy
+
+Production ควรใช้งาน HTTPS เท่านั้น
+
+## File Upload
+
+ระบบตรวจ:
+- ขนาดไฟล์
+- MIME จากเนื้อหาไฟล์
+- รูปภาพด้วย `getimagesize()`
+- จำกัด dimension/pixel
+- PDF ต้องมี magic header `%PDF-`
+- ชื่อไฟล์สุ่ม
+- uploads ไม่อนุญาต execute PHP/script
+
+## QR Verification
+
+ใบเสร็จและบัตรสมาชิกใช้ token แบบสุ่มสำหรับ URL ตรวจสอบ  
+ไม่ใช้ running member number เป็น public verification key
+
+## ไฟล์ Diagnostic
+
+ไฟล์ตรวจสอบฐานข้อมูลแบบ Public ถูกนำออกจาก Production แล้ว  
+หากต้องตรวจ DB ให้ตรวจจาก CLI/SSH หรือสร้างไฟล์ชั่วคราวและลบทันทีหลังใช้งาน
+
+## CDN
+
+บัตรและใบเสร็จใช้ QRCode.js และ html2canvas จาก CDN  
+หากระบบต้องทำงานในเครือข่ายปิด ควรดาวน์โหลด library มาเก็บใน Server และแก้ CSP ให้เป็น `self` เท่านั้น
+
+## ก่อนเปิดใช้งานจริง
+
+ดู Checklist เพิ่มเติมที่:
+
+```text
+../PRODUCTION_DEPLOY.md
+```
