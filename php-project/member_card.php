@@ -549,7 +549,7 @@ body{
         <div class="photo-wrap">
           <div class="member-photo">
             <?php if (!empty($member['member_photo_path'])): ?>
-              <img src="<?=h($member['member_photo_path'])?>" alt="รูปสมาชิก">
+              <img src="secure_file.php?kind=member_photo&amp;id=<?=h((string)$member['application_id'])?>" alt="รูปสมาชิก">
             <?php else: ?>
               <div class="photo-placeholder">
                 กรุณาอัปโหลดรูปถ่าย<br>เพื่อใช้บนบัตรสมาชิก
@@ -561,7 +561,7 @@ body{
             <?php if (!empty($cardSettings['president_signature_path'])): ?>
               <img
                 class="president-signature"
-                src="<?=h($cardSettings['president_signature_path'])?>"
+                src="secure_file.php?kind=president_signature"
                 alt="ลายเซ็นนายกสมาคม"
               >
             <?php endif; ?>
