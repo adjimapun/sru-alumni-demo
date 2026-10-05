@@ -250,7 +250,23 @@ function require_login(): array {
         exit;
     }
 
+    $script = basename((string)($_SERVER['PHP_SELF'] ?? ''));
+    if (
+        isset($u['must_change_password']) &&
+        (int)$u['must_change_password'] === 1 &&
+        $script !== 'change_password.php'
+    ) {
+        header('Location: change_password.php');
+        exit;
+    }
+
     return $u;
+}
+
+function password_meets_policy(string $password): bool {
+    return mb_strlen($password, 'UTF-8') >= 12
+        && preg_match('/[A-Za-z]/', $password)
+        && preg_match('/[0-9]/', $password);
 }
 
 function current_admin(): ?array {
