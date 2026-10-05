@@ -24,6 +24,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     verify_csrf();
 
     try {
+        if ($app && ($app['status'] ?? '') === 'approved') {
+            throw new RuntimeException('ใบสมัครได้รับการอนุมัติแล้ว ไม่สามารถแก้ไขข้อมูลใบสมัครได้ หากต้องการเปลี่ยนรูปบัตรสมาชิกให้ดำเนินการที่เมนูบัตรสมาชิกดิจิทัล');
+        }
+
         // ข้อมูลผู้สมัคร — บังคับกรอกทุกช่อง
         $titlePrefix = trim($_POST['title_prefix'] ?? '');
         $fullName = trim($_POST['full_name'] ?? '');
@@ -55,8 +59,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // ข้อมูลการชำระเงิน — บังคับกรอกทุกช่อง
         $paidDate = trim($_POST['paid_date'] ?? '');
         $paidTime = trim($_POST['paid_time'] ?? '');
-        $amountRaw = trim($_POST['amount'] ?? '');
-        $amount = (float)$amountRaw;
+        // ค่าสมาชิกกำหนดฝั่ง Server เท่านั้น ป้องกันการแก้ยอดจาก Browser
+        $amountRaw = '100.00';
+        $amount = 100.00;
 
         $required = [
             'คำนำหน้าชื่อ' => $titlePrefix,
@@ -252,7 +257,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             delete_managed_upload($newPhoto, 'member_photo_');
             $newPhoto = null;
         }
-        $err = $e->getMessage();
+        $err = safe_error_message($e);
     }
 
     $st = $pdo->prepare('SELECT * FROM applications WHERE user_id=? LIMIT 1');
@@ -548,11 +553,13 @@ LINE ID / ช่องทางติดต่ออื่น <span class="req">
 <input
   type="number"
   name="amount"
-  value="<?=pv($latestPayment,'amount') ?: '100.00'?>"
-  min="0.01"
+  value="100.00"
   step="0.01"
+  readonly
+  class="readonly-field"
   required
 >
+<span class="note">ค่าธรรมเนียมถูกกำหนดโดยระบบ ไม่สามารถแก้ไขยอดได้</span>
 </label>
 
 <label>
