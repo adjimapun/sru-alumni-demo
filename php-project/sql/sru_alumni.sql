@@ -1,5 +1,5 @@
-CREATE DATABASE IF NOT EXISTS sru_alumni CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE sru_alumni;
+-- Import ไฟล์นี้เข้า Database ที่สร้างไว้สำหรับระบบโดยตรง
+-- ไม่ระบุชื่อ Database แบบ hard-code เพื่อรองรับชื่อ Database ของ Production
 
 CREATE TABLE users (
   id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
