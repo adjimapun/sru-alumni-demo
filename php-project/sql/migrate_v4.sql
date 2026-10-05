@@ -1,7 +1,6 @@
 -- Migration V4: ตั้งค่าผู้รับเงิน/ลายเซ็น และจัดการผู้ดูแลระบบหลังบ้าน
+-- รันบน Database ของระบบที่เลือกอยู่เท่านั้น (ไม่มี USE แบบ hard-code)
 -- รันไฟล์นี้ครั้งเดียว หลังจาก migrate_v3.sql
-USE sru_alumni;
-
 ALTER TABLE admins
   ADD COLUMN full_name VARCHAR(255) NULL AFTER id,
   ADD COLUMN is_active TINYINT(1) NOT NULL DEFAULT 1 AFTER password_hash,
