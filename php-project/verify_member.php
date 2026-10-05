@@ -1,10 +1,10 @@
 <?php
 require __DIR__.'/config.php';
 
-$memberNo = trim($_GET['member'] ?? '');
+$code = strtolower(trim((string)($_GET['code'] ?? '')));
 $member = null;
 
-if ($memberNo !== '') {
+if (preg_match('/^[a-f0-9]{32}$/', $code)) {
     $st = db()->prepare(
         'SELECT
             m.member_no,
@@ -19,10 +19,10 @@ if ($memberNo !== '') {
          JOIN applications a ON a.id=m.application_id
          LEFT JOIN faculties f ON f.id=a.faculty_id
          LEFT JOIN member_types mt ON mt.id=a.member_type_id
-         WHERE m.member_no=?
+         WHERE m.verification_code=?
          LIMIT 1'
     );
-    $st->execute([$memberNo]);
+    $st->execute([$code]);
     $member = $st->fetch() ?: null;
 }
 
