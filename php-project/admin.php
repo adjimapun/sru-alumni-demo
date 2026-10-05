@@ -781,7 +781,7 @@ $canApprove = !$isApproved && !empty($r['payment_id']);
 
 <td>
 <?php if ($r['slip_path']): ?>
-<a href="<?=h($r['slip_path'])?>" target="_blank">เปิดสลิป</a>
+<a href="secure_file.php?kind=slip&amp;id=<?=h((string)$r['payment_id'])?>" target="_blank" rel="noopener">เปิดสลิป</a>
 <?php else: ?>
 -
 <?php endif; ?>
