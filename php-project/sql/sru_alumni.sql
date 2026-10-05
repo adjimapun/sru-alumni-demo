@@ -147,6 +147,7 @@ CREATE TABLE members (
   user_id BIGINT UNSIGNED NOT NULL UNIQUE,
   approved_payment_id BIGINT UNSIGNED NOT NULL UNIQUE,
   member_no VARCHAR(30) NOT NULL UNIQUE,
+  verification_code CHAR(32) NOT NULL UNIQUE,
   status VARCHAR(20) NOT NULL DEFAULT 'active',
   approved_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   cancelled_at DATETIME NULL,
@@ -188,4 +189,17 @@ CREATE TABLE trainings (
   CONSTRAINT fk_training_member FOREIGN KEY(member_id) REFERENCES members(id) ON DELETE CASCADE,
   INDEX idx_training_member(member_id),
   INDEX idx_training_date(activity_date)
+) ENGINE=InnoDB;
+
+
+CREATE TABLE auth_attempts (
+  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  scope VARCHAR(30) NOT NULL,
+  identity_hash CHAR(64) NOT NULL,
+  ip_hash CHAR(64) NOT NULL,
+  was_success TINYINT(1) NOT NULL DEFAULT 0,
+  attempted_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  INDEX idx_auth_identity(scope,identity_hash,ip_hash,attempted_at),
+  INDEX idx_auth_ip(scope,ip_hash,attempted_at),
+  INDEX idx_auth_time(attempted_at)
 ) ENGINE=InnoDB;
