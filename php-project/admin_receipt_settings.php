@@ -173,7 +173,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $error === '') {
         <?php if (!empty($settings['signature_path'])): ?>
           <div style="margin-top:14px">
             <div class="note" style="margin-bottom:6px">ลายเซ็นปัจจุบัน</div>
-            <img class="signature-preview" src="<?=h($settings['signature_path'])?>" alt="ลายเซ็นผู้รับเงิน">
+            <img class="signature-preview" src="secure_file.php?kind=receipt_signature" alt="ลายเซ็นผู้รับเงิน">
 
             <label class="check" style="margin-top:10px">
               <input type="checkbox" name="remove_signature" value="1">
@@ -196,7 +196,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $error === '') {
   <h2 style="margin-top:0">ตัวอย่างส่วนผู้รับเงิน</h2>
   <div style="max-width:390px;text-align:center;padding:24px;border:1px solid #dce8ef;border-radius:14px">
     <?php if (!empty($settings['signature_path'])): ?>
-      <img src="<?=h($settings['signature_path'])?>" alt="ลายเซ็นผู้รับเงิน" style="max-width:220px;max-height:85px;object-fit:contain">
+      <img src="secure_file.php?kind=receipt_signature" alt="ลายเซ็นผู้รับเงิน" style="max-width:220px;max-height:85px;object-fit:contain">
     <?php else: ?>
       <div class="note" style="height:65px;display:grid;place-items:center">ยังไม่ได้อัปโหลดลายเซ็น</div>
     <?php endif; ?>
