@@ -42,8 +42,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $schemaReady) {
             if (strlen($username) < 3) {
                 throw new RuntimeException('Username ต้องมีอย่างน้อย 3 ตัวอักษร');
             }
-            if (strlen($password) < 12) {
-                throw new RuntimeException('Password ต้องมีอย่างน้อย 12 ตัวอักษร');
+            if (!password_meets_policy($password)) {
+                throw new RuntimeException('Password ต้องมีอย่างน้อย 12 ตัวอักษร และมีทั้งตัวอักษรภาษาอังกฤษและตัวเลข');
             }
 
             $st = $pdo->prepare(
@@ -101,8 +101,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $schemaReady) {
             if ($id <= 0) {
                 throw new RuntimeException('ข้อมูลผู้ดูแลระบบไม่ถูกต้อง');
             }
-            if (strlen($password) < 12) {
-                throw new RuntimeException('Password ใหม่ต้องมีอย่างน้อย 12 ตัวอักษร');
+            if (!password_meets_policy($password)) {
+                throw new RuntimeException('Password ใหม่ต้องมีอย่างน้อย 12 ตัวอักษร และมีทั้งตัวอักษรภาษาอังกฤษและตัวเลข');
             }
 
             $st = $pdo->prepare(
