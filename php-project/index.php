@@ -18,9 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $citizen = preg_replace('/\D/', '', $_POST['citizen_id'] ?? '');
     $phone = preg_replace('/\D/', '', $_POST['phone'] ?? '');
-    $confirmPhone = preg_replace('/\D/', '', $_POST['confirm_phone'] ?? '');
     $password = (string)($_POST['password'] ?? '');
-    $confirmPassword = (string)($_POST['confirm_password'] ?? '');
 
     try {
         if ($action === 'register') {
@@ -30,30 +28,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (!preg_match('/^0\d{9}$/', $phone)) {
                 throw new RuntimeException('กรุณากรอกหมายเลขโทรศัพท์มือถือ 10 หลัก');
             }
-            if ($phone !== $confirmPhone) {
-                throw new RuntimeException('หมายเลขโทรศัพท์มือถือทั้งสองช่องไม่ตรงกัน');
-            }
-            if (!password_meets_policy($password)) {
-                throw new RuntimeException('รหัสผ่านต้องมีอย่างน้อย 12 ตัวอักษร และมีทั้งตัวอักษรภาษาอังกฤษและตัวเลข');
-            }
-            if ($password !== $confirmPassword) {
-                throw new RuntimeException('รหัสผ่านและยืนยันรหัสผ่านไม่ตรงกัน');
-            }
-            if (empty($_POST['privacy'])) {
-                throw new RuntimeException('กรุณายอมรับเงื่อนไขการใช้งานและนโยบายความเป็นส่วนตัว');
-            }
-
             $st = db()->prepare(
-                'INSERT INTO users(citizen_hash,citizen_last4,phone,password_hash,must_change_password) VALUES(?,?,?,?,0)'
+                'INSERT INTO users(citizen_hash,citizen_last4,phone,password_hash,must_change_password) VALUES(?,?,?,?,1)'
             );
             $st->execute([
                 citizen_hash($citizen),
                 substr($citizen, -4),
                 $phone,
-                password_hash($password, PASSWORD_DEFAULT)
+                password_hash($phone, PASSWORD_DEFAULT)
             ]);
 
-            $success = 'สมัครบัญชีสำเร็จ สามารถเข้าสู่ระบบได้ทันที';
+            $success = 'สมัครบัญชีสำเร็จ Username คือหมายเลขบัตรประชาชน และรหัสผ่านเริ่มต้นคือหมายเลขโทรศัพท์มือถือ ระบบจะให้เปลี่ยนรหัสผ่านเมื่อเข้าสู่ระบบครั้งแรก';
             $activeTab = 'login';
         } elseif ($action === 'login') {
             if (!preg_match('/^\d{13}$/', $citizen) || $password === '') {
@@ -528,6 +513,7 @@ input:focus{
         name="citizen_id"
         maxlength="13"
         inputmode="numeric"
+        autocomplete="username"
         placeholder="เลขบัตรประชาชน 13 หลัก"
         value="<?=h($activeTab==='register' ? ($_POST['citizen_id'] ?? '') : '')?>"
         required
@@ -541,58 +527,19 @@ input:focus{
         name="phone"
         maxlength="10"
         inputmode="tel"
+        autocomplete="tel"
         placeholder="08XXXXXXXX"
         value="<?=h($activeTab==='register' ? ($_POST['phone'] ?? '') : '')?>"
         required
       >
     </label>
 
-    <label class="field">
-      ยืนยันหมายเลขโทรศัพท์มือถือ *
-      <input
-        id="regPhone2"
-        name="confirm_phone"
-        maxlength="10"
-        inputmode="tel"
-        placeholder="08XXXXXXXX"
-        required
-      >
-    </label>
-
-    <label class="field">
-      รหัสผ่าน *
-      <input
-        id="regPassword"
-        name="password"
-        type="password"
-        minlength="12"
-        autocomplete="new-password"
-        placeholder="อย่างน้อย 12 ตัวอักษร มีตัวอักษรภาษาอังกฤษและตัวเลข"
-        required
-      >
-    </label>
-
-    <label class="field">
-      ยืนยันรหัสผ่าน *
-      <input
-        name="confirm_password"
-        type="password"
-        minlength="12"
-        autocomplete="new-password"
-        required
-      >
-    </label>
-
     <div class="hint">
-      <b>ข้อมูลเข้าสู่ระบบ</b><br>
+      <b>ใช้เพียง 2 ข้อมูลในการสมัครบัญชี</b><br>
       Username = หมายเลขบัตรประชาชน<br>
-      Password = รหัสผ่านที่ผู้สมัครกำหนด
+      รหัสผ่านเริ่มต้น = หมายเลขโทรศัพท์มือถือ<br>
+      <span class="note">เพื่อความปลอดภัย ระบบจะให้เปลี่ยนรหัสผ่านเมื่อเข้าสู่ระบบครั้งแรก</span>
     </div>
-
-    <label class="check">
-      <input type="checkbox" name="privacy" value="1" required>
-      <span>ยอมรับเงื่อนไขการใช้งานและนโยบายความเป็นส่วนตัว</span>
-    </label>
 
     <button class="btn" type="submit">สมัครบัญชี</button>
 
