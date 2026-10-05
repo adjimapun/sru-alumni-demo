@@ -79,6 +79,9 @@ header small{display:block;opacity:.84}.demo{margin-left:auto;font-size:12px;bac
 
   <section class="card">
     <h2 style="margin-top:0">ยินดีต้อนรับเข้าสู่ระบบ</h2>
+    <?php if (isset($_GET['password_changed'])): ?>
+      <div class="status ok"><b>เปลี่ยนรหัสผ่านเรียบร้อยแล้ว</b></div>
+    <?php endif; ?>
     <div class="status ok">
       <b>เข้าสู่ระบบสำเร็จ</b><br>
       Username: <?=h($maskedCitizen)?>
@@ -103,6 +106,7 @@ header small{display:block;opacity:.84}.demo{margin-left:auto;font-size:12px;bac
     <div class="toolbar">
       <a class="btn" href="application.php"><?= $app ? 'เปิด / แก้ไขใบสมัครสมาชิก' : 'กรอกใบสมัครสมาชิก' ?></a>
       <a class="btn alt" href="track.php">ติดตามสถานะ</a>
+      <a class="btn alt" href="change_password.php">เปลี่ยนรหัสผ่าน</a>
       <?php if ($member): ?>
         <a class="btn" href="member_card.php">บัตรสมาชิกดิจิทัล</a>
         <a class="btn alt" href="receipt.php">ใบเสร็จรับเงิน</a>
