@@ -125,7 +125,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <a href="admin.php">ใบสมัคร</a>
     <a href="admin_settings.php">ตั้งค่า</a>
     <a href="index.php">หน้าหลักของระบบ</a>
-    <a href="admin.php?logout=1">ออกจากระบบ</a>
+    <a href="admin.php?logout=1&amp;token=<?=h(csrf_token())?>">ออกจากระบบ</a>
   </nav>
 </header>
 
