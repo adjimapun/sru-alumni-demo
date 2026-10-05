@@ -27,6 +27,7 @@ if (!$admin) {
       <a href="admin_settings.php">ตั้งค่า ▾</a>
       <span class="nav-submenu">
         <a href="admin_receipt_settings.php">ผู้รับเงิน / ลายเซ็นใบเสร็จ</a>
+        <a href="admin_member_card_settings.php">บัตรสมาชิก / ลายเซ็นนายกสมาคม</a>
         <a href="admin_master.php">คณะ / ประเภทสมาชิก</a>
         <a href="admin_users.php">ผู้ดูแลระบบหลังบ้าน</a>
       </span>
@@ -46,6 +47,11 @@ if (!$admin) {
       <a class="setting-card" href="admin_receipt_settings.php">
         <h3>ผู้รับเงิน / ลายเซ็นใบเสร็จ</h3>
         <p>แก้ไขชื่อผู้รับเงิน ตำแหน่ง และอัปโหลดลายเซ็นสำหรับใบเสร็จอิเล็กทรอนิกส์</p>
+      </a>
+
+      <a class="setting-card" href="admin_member_card_settings.php">
+        <h3>บัตรสมาชิก / ลายเซ็นนายกสมาคม</h3>
+        <p>กำหนดชื่อ ตำแหน่ง และลายเซ็นนายกสมาคม สำหรับแสดงบนบัตรสมาชิกดิจิทัล</p>
       </a>
 
       <a class="setting-card" href="admin_master.php">
