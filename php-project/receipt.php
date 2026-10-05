@@ -324,7 +324,7 @@ body{margin:0;background:#eaf4f8;font-family:'Kanit',sans-serif;color:#123b59}
       <?php if (!empty($receiptSettings['signature_path'])): ?>
         <img
           class="signature-image"
-          src="<?=h($receiptSettings['signature_path'])?>"
+          src="secure_file.php?kind=receipt_signature"
           alt="ลายเซ็นผู้รับเงิน"
         >
       <?php endif; ?>
