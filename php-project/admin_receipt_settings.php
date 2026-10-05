@@ -47,39 +47,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $error === '') {
         }
 
         if (!empty($_FILES['signature']['name'])) {
-            $file = $_FILES['signature'];
-
-            if ($file['error'] !== UPLOAD_ERR_OK) {
-                throw new RuntimeException('อัปโหลดลายเซ็นไม่สำเร็จ');
-            }
-
-            if ($file['size'] > 2 * 1024 * 1024) {
-                throw new RuntimeException('ไฟล์ลายเซ็นต้องมีขนาดไม่เกิน 2 MB');
-            }
-
-            $mime = (new finfo(FILEINFO_MIME_TYPE))->file($file['tmp_name']);
-            $allowed = [
-                'image/png' => 'png',
-                'image/jpeg' => 'jpg',
-            ];
-
-            if (!isset($allowed[$mime])) {
-                throw new RuntimeException('ลายเซ็นรองรับเฉพาะไฟล์ PNG หรือ JPG');
-            }
-
-            $dir = __DIR__.'/uploads';
-            if (!is_dir($dir) && !mkdir($dir, 0755, true)) {
-                throw new RuntimeException('ไม่สามารถสร้างโฟลเดอร์สำหรับลายเซ็นได้');
-            }
-
-            $name = 'signature_'.bin2hex(random_bytes(12)).'.'.$allowed[$mime];
-            $target = $dir.'/'.$name;
-
-            if (!move_uploaded_file($file['tmp_name'], $target)) {
-                throw new RuntimeException('บันทึกไฟล์ลายเซ็นไม่สำเร็จ');
-            }
-
-            $uploadedPath = 'uploads/'.$name;
+            $uploadedPath = upload_image_file(
+                'signature',
+                'signature_',
+                2 * 1024 * 1024
+            );
             $newSignature = $uploadedPath;
         }
 
@@ -100,15 +72,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $error === '') {
             (int)$admin['id'],
         ]);
 
-        if (
-            $oldSignature &&
-            $oldSignature !== $newSignature &&
-            str_starts_with($oldSignature, 'uploads/signature_')
-        ) {
-            $oldFile = __DIR__.'/'.$oldSignature;
-            if (is_file($oldFile)) {
-                @unlink($oldFile);
-            }
+        if ($oldSignature && $oldSignature !== $newSignature) {
+            delete_managed_upload($oldSignature, 'signature_');
         }
 
         $settings = [
@@ -121,12 +86,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $error === '') {
 
     } catch (Throwable $e) {
         if (!empty($uploadedPath)) {
-            $uploadedFile = __DIR__.'/'.$uploadedPath;
-            if (is_file($uploadedFile)) {
-                @unlink($uploadedFile);
-            }
+            delete_managed_upload($uploadedPath, 'signature_');
         }
-        $error = $e->getMessage();
+        $error = safe_error_message($e);
     }
 }
 ?>
@@ -204,7 +166,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $error === '') {
       <div class="full">
         <label>
           อัปโหลดลายเซ็น
-          <input type="file" name="signature" accept=".png,.jpg,.jpeg,image/png,image/jpeg">
+          <input type="file" name="signature" accept=".png,.jpg,.jpeg,.webp,image/png,image/jpeg,image/webp">
         </label>
         <div class="note">แนะนำ PNG พื้นหลังโปร่งใส หรือ JPG · ขนาดไม่เกิน 2 MB</div>
 
