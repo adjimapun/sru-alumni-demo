@@ -181,7 +181,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <div style="margin:14px 0">
         <img
           class="signature-preview"
-          src="<?=h($settings['president_signature_path'])?>"
+          src="secure_file.php?kind=president_signature"
           alt="ลายเซ็นนายกสมาคม"
         >
         <label class="check" style="max-width:360px;margin:auto">
@@ -200,7 +200,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <?php if (!empty($settings['president_signature_path'])): ?>
         <img
           class="signature-preview"
-          src="<?=h($settings['president_signature_path'])?>"
+          src="secure_file.php?kind=president_signature"
           alt="ลายเซ็นนายกสมาคม"
         >
       <?php else: ?>
