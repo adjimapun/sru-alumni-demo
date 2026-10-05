@@ -114,6 +114,55 @@ function upload_file(string $field, string $prefix): ?string {
     if(!move_uploaded_file($f['tmp_name'],$dir.'/'.$name)) throw new RuntimeException('บันทึกไฟล์ไม่สำเร็จ');
     return 'uploads/'.$name;
 }
+
+function upload_image_file(string $field, string $prefix, int $maxBytes = MAX_UPLOAD_BYTES): ?string {
+    if (empty($_FILES[$field]['name'])) return null;
+
+    $f = $_FILES[$field];
+
+    if ($f['error'] !== UPLOAD_ERR_OK) {
+        throw new RuntimeException('อัปโหลดรูปภาพไม่สำเร็จ');
+    }
+
+    if ($f['size'] > $maxBytes) {
+        throw new RuntimeException('รูปภาพมีขนาดใหญ่เกินกำหนด');
+    }
+
+    $mime = (new finfo(FILEINFO_MIME_TYPE))->file($f['tmp_name']);
+    $allowed = [
+        'image/jpeg' => 'jpg',
+        'image/png' => 'png',
+        'image/webp' => 'webp',
+    ];
+
+    if (!isset($allowed[$mime])) {
+        throw new RuntimeException('รองรับรูปภาพเฉพาะ JPG, PNG และ WEBP');
+    }
+
+    $dir = __DIR__.'/uploads';
+    if (!is_dir($dir) && !mkdir($dir, 0755, true) && !is_dir($dir)) {
+        throw new RuntimeException('ไม่สามารถสร้างโฟลเดอร์สำหรับรูปภาพได้');
+    }
+
+    $name = $prefix.bin2hex(random_bytes(12)).'.'.$allowed[$mime];
+
+    if (!move_uploaded_file($f['tmp_name'], $dir.'/'.$name)) {
+        throw new RuntimeException('บันทึกรูปภาพไม่สำเร็จ');
+    }
+
+    return 'uploads/'.$name;
+}
+
+function delete_managed_upload(?string $path, string $prefix): void {
+    if (!$path || !str_starts_with($path, 'uploads/'.$prefix)) {
+        return;
+    }
+
+    $file = __DIR__.'/'.$path;
+    if (is_file($file)) {
+        @unlink($file);
+    }
+}
 function app_status_th(string $s): string {
     return [
       'draft'=>'ฉบับร่าง','pending_payment'=>'รอชำระค่าธรรมเนียม',
@@ -150,6 +199,38 @@ function receipt_settings(): array {
         ];
     } catch (PDOException $e) {
         // รองรับระบบที่ยังไม่ได้รัน migrate_v4.sql โดยใช้ค่าเดิมชั่วคราว
+        return $defaults;
+    }
+}
+
+
+function member_card_settings(): array {
+    $defaults = [
+        'president_name' => '',
+        'president_position' => 'นายกสมาคมศิษย์เก่า มรส.',
+        'president_signature_path' => null,
+    ];
+
+    try {
+        $st = db()->query(
+            'SELECT president_name,president_position,president_signature_path
+             FROM member_card_settings
+             WHERE id=1
+             LIMIT 1'
+        );
+        $row = $st->fetch();
+
+        if (!$row) {
+            return $defaults;
+        }
+
+        return [
+            'president_name' => trim((string)($row['president_name'] ?? '')),
+            'president_position' => trim((string)($row['president_position'] ?? ''))
+                ?: $defaults['president_position'],
+            'president_signature_path' => $row['president_signature_path'] ?? null,
+        ];
+    } catch (PDOException $e) {
         return $defaults;
     }
 }
