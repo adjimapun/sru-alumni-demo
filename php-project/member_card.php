@@ -11,6 +11,7 @@ function load_member_card(PDO $pdo, int $userId): ?array {
         'SELECT
             m.id AS member_id,
             m.member_no,
+            m.verification_code,
             m.approved_at,
             m.status AS member_status,
             a.id AS application_id,
@@ -68,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $member = load_member_card($pdo, (int)$u['id']);
 
     } catch (Throwable $e) {
-        $error = $e->getMessage();
+        $error = safe_error_message($e);
     }
 }
 
@@ -86,9 +87,8 @@ if ($displayOccupation === '') {
     $displayOccupation = '-';
 }
 
-$scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
 $basePath = rtrim(str_replace('\\','/',dirname($_SERVER['PHP_SELF'])), '/');
-$verifyUrl = $scheme.'://'.$_SERVER['HTTP_HOST'].$basePath.'/verify_member.php?member='.urlencode($member['member_no']);
+$verifyUrl = public_base_url().$basePath.'/verify_member.php?code='.urlencode((string)$member['verification_code']);
 $downloadName = 'SRU-Alumni-Member-'.$member['member_no'].'.png';
 ?>
 <!doctype html>
