@@ -64,6 +64,47 @@ if (!current_admin()) {
 }
 
 /**
+ * สร้างเลขสมาชิก: ปี พ.ศ. 2 หลัก + running 4 หลัก
+ * ตัวอย่าง พ.ศ. 2569 ลำดับ 1 = 690001
+ * ต้องเรียกภายใน Transaction
+ */
+function nextMemberNumber(PDO $pdo): string
+{
+    $year2 = substr((string)thai_year(), -2);
+
+    $pdo->prepare(
+        'INSERT IGNORE INTO member_number_sequences(year2,last_number) VALUES(?,0)'
+    )->execute([$year2]);
+
+    $st = $pdo->prepare(
+        'SELECT last_number
+         FROM member_number_sequences
+         WHERE year2=?
+         FOR UPDATE'
+    );
+    $st->execute([$year2]);
+    $row = $st->fetch();
+
+    if (!$row) {
+        throw new RuntimeException('ไม่สามารถสร้างเลขสมาชิกได้');
+    }
+
+    $next = (int)$row['last_number'] + 1;
+
+    if ($next > 9999) {
+        throw new RuntimeException('เลขสมาชิกประจำปี '.$year2.' ครบ 9,999 รายการแล้ว');
+    }
+
+    $pdo->prepare(
+        'UPDATE member_number_sequences
+         SET last_number=?
+         WHERE year2=?'
+    )->execute([$next, $year2]);
+
+    return $year2.str_pad((string)$next, 4, '0', STR_PAD_LEFT);
+}
+
+/**
  * อนุมัติรายการชำระเงิน 1 รายการ
  * ต้องเรียกภายใน Transaction
  */
@@ -116,18 +157,22 @@ function approvePayment(PDO $pdo, int $paymentId, int $adminId): array
              WHERE id=?'
         )->execute([$paymentId, $memberId]);
     } else {
-        // เลขสมาชิกออกตามลำดับการอนุมัติจริงจาก AUTO_INCREMENT ของ members.id
+        // ออกเลขสมาชิกทันทีเมื่อเจ้าหน้าที่อนุมัติการชำระเงิน
+        // รูปแบบ: ปี พ.ศ. 2 หลัก + running 4 หลัก เช่น 690001
+        $memberNo = nextMemberNumber($pdo);
+
         $pdo->prepare(
             'INSERT INTO members(
                 application_id,user_id,approved_payment_id,member_no,status
-             ) VALUES(?,?,?,"PENDING","active")'
-        )->execute([$payment['application_id'], $payment['user_id'], $paymentId]);
+             ) VALUES(?,?,?,?,"active")'
+        )->execute([
+            $payment['application_id'],
+            $payment['user_id'],
+            $paymentId,
+            $memberNo
+        ]);
 
         $memberId = (int)$pdo->lastInsertId();
-        $memberNo = 'ALUMNI-'.str_pad((string)$memberId, 6, '0', STR_PAD_LEFT);
-
-        $pdo->prepare('UPDATE members SET member_no=? WHERE id=?')
-            ->execute([$memberNo, $memberId]);
     }
 
     // หาก payment นี้เคยมีใบเสร็จและถูกยกเลิก ให้เปิดใช้งานใบเสร็จเดิม
