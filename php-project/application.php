@@ -504,7 +504,7 @@ LINE ID / ช่องทางติดต่ออื่น <span class="req">
 <div class="photo-upload-box">
   <div class="photo-preview">
     <?php if (!empty($app['member_photo_path'])): ?>
-      <img src="<?=h($app['member_photo_path'])?>" alt="รูปถ่ายสำหรับบัตรสมาชิก">
+      <img src="secure_file.php?kind=member_photo&amp;id=<?=h((string)$app['id'])?>" alt="รูปถ่ายสำหรับบัตรสมาชิก">
     <?php else: ?>
       ยังไม่ได้อัปโหลดรูปถ่าย
     <?php endif; ?>
