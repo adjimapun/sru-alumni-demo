@@ -279,6 +279,17 @@ function client_ip(): string {
     return (string)($_SERVER['REMOTE_ADDR'] ?? 'unknown');
 }
 
+function public_base_url(): string {
+    $configured = trim((string)(getenv('SRU_PUBLIC_BASE_URL') ?: ''));
+    if ($configured !== '') {
+        return rtrim($configured, '/');
+    }
+
+    $host = preg_replace('/[^A-Za-z0-9.:-]/', '', (string)($_SERVER['HTTP_HOST'] ?? 'localhost'));
+    $scheme = is_https_request() ? 'https' : 'http';
+    return $scheme.'://'.$host;
+}
+
 function auth_identity_hash(string $scope, string $identity): string {
     return hash('sha256', $scope.'|'.mb_strtolower(trim($identity), 'UTF-8'));
 }
