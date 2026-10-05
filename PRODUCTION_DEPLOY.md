@@ -114,7 +114,8 @@ V6 สร้างตาราง `auth_attempts`
 
 ## 11. Upload Security
 
-ตรวจว่า Web Server เขียน `uploads` ได้ แต่ execute script ไม่ได้  
+ตรวจว่า Web Server เขียน `uploads` ได้ แต่ URL `/php-project/uploads/...` ต้องตอบ 403  
+ระบบอ่านไฟล์ผ่าน `secure_file.php` หลังตรวจสิทธิ์เท่านั้น  
 ห้าม chmod 777 หากไม่จำเป็น
 
 ## 12. Security Test ก่อน Go-live
