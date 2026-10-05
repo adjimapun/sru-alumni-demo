@@ -4,6 +4,7 @@ require __DIR__.'/config.php';
 $u = require_login();
 $pdo = db();
 $err = '';
+$newPhoto = null;
 
 $faculties = $pdo->query('SELECT id,name FROM faculties WHERE is_active=1 ORDER BY name')->fetchAll();
 $memberTypes = $pdo->query('SELECT id,name,allow_other_text FROM member_types WHERE is_active=1 ORDER BY id')->fetchAll();
@@ -126,6 +127,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $memberTypeOther = '';
         }
 
+        // รูปถ่ายสำหรับบัตรสมาชิก (สมาชิกสามารถอัปโหลดหรือเปลี่ยนภายหลังได้)
+        $oldPhotoPath = $app['member_photo_path'] ?? null;
+        $newPhoto = upload_image_file('member_photo', 'member_photo_');
+        $memberPhotoPath = $newPhoto ?: $oldPhotoPath;
+
         // ต้องมีหลักฐานการชำระเงินในการส่งครั้งแรก
         // หากหลักฐานเดิมถูกเจ้าหน้าที่ตีกลับ ต้องแนบหลักฐานใหม่ก่อนส่งอีกครั้ง
         $mustUploadSlip = !$latestPayment || ($latestPayment['status'] ?? '') === 'invalid';
@@ -154,6 +160,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'occupation' => $occupation,
             'member_type_id' => $memberTypeId,
             'member_type_other' => $memberTypeOther,
+            'member_photo_path' => $memberPhotoPath,
         ];
 
         $pdo->beginTransaction();
@@ -180,6 +187,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 occupation=:occupation,
                 member_type_id=:member_type_id,
                 member_type_other=:member_type_other,
+                member_photo_path=:member_photo_path,
                 updated_at=NOW()
                 WHERE id=:id';
 
@@ -190,11 +198,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $sql = 'INSERT INTO applications(
                 user_id,title_prefix,full_name,nickname,gender,birth_date,student_code,entry_year,
                 faculty_id,major,degree,grad_year,address,phone,email,line_id,workplace,position,
-                occupation,member_type_id,member_type_other,status
+                occupation,member_type_id,member_type_other,member_photo_path,status
             ) VALUES(
                 :user_id,:title_prefix,:full_name,:nickname,:gender,:birth_date,:student_code,:entry_year,
                 :faculty_id,:major,:degree,:grad_year,:address,:phone,:email,:line_id,:workplace,:position,
-                :occupation,:member_type_id,:member_type_other,"pending_payment"
+                :occupation,:member_type_id,:member_type_other,:member_photo_path,"pending_payment"
             )';
 
             $vals['user_id'] = $u['id'];
@@ -229,12 +237,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $pdo->commit();
 
+        if ($newPhoto && !empty($oldPhotoPath) && $oldPhotoPath !== $newPhoto) {
+            delete_managed_upload($oldPhotoPath, 'member_photo_');
+        }
+
         header('Location: track.php');
         exit;
 
     } catch (Throwable $e) {
         if ($pdo->inTransaction()) {
             $pdo->rollBack();
+        }
+        if ($newPhoto) {
+            delete_managed_upload($newPhoto, 'member_photo_');
+            $newPhoto = null;
         }
         $err = $e->getMessage();
     }
@@ -273,6 +289,10 @@ $mustUploadSlip = !$latestPayment || ($latestPayment['status'] ?? '') === 'inval
 <style>
 .required-note{background:#fff6e6;border-left:5px solid #e4a11b;padding:12px 14px;border-radius:10px;margin:12px 0}
 .req{color:#b42318;font-weight:600}
+.photo-upload-box{display:grid;grid-template-columns:150px 1fr;gap:18px;align-items:center;background:#f5fbfe;border:1px solid #d7eaf1;border-radius:14px;padding:16px}
+.photo-preview{width:132px;height:166px;border-radius:12px;overflow:hidden;border:1px solid #bdd4df;background:#fff;display:grid;place-items:center;color:#78909c;font-size:12px;text-align:center}
+.photo-preview img{width:100%;height:100%;object-fit:cover;display:block}
+@media(max-width:650px){.photo-upload-box{grid-template-columns:1fr}.photo-preview{margin:auto}}
 </style>
 </head>
 <body>
@@ -475,7 +495,34 @@ LINE ID / ช่องทางติดต่ออื่น <span class="req">
 </section>
 
 <section>
-<h2>5. การชำระค่าธรรมเนียม / แนบสลิป</h2>
+<h2>5. รูปถ่ายสำหรับบัตรสมาชิกสมาคมศิษย์เก่า</h2>
+<div class="photo-upload-box">
+  <div class="photo-preview">
+    <?php if (!empty($app['member_photo_path'])): ?>
+      <img src="<?=h($app['member_photo_path'])?>" alt="รูปถ่ายสำหรับบัตรสมาชิก">
+    <?php else: ?>
+      ยังไม่ได้อัปโหลดรูปถ่าย
+    <?php endif; ?>
+  </div>
+  <div>
+    <label>
+      อัปโหลดรูปถ่ายของสมาชิก (JPG/PNG/WEBP ไม่เกิน 5 MB)
+      <input
+        type="file"
+        name="member_photo"
+        accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+      >
+    </label>
+    <div class="note" style="margin-top:8px">
+      แนะนำรูปหน้าตรงแนวตั้ง เห็นใบหน้าชัดเจน พื้นหลังเรียบ ระบบจะนำรูปนี้ไปใช้จัดทำบัตรสมาชิกดิจิทัล
+      และสามารถเปลี่ยนรูปภายหลังได้เมื่อได้รับอนุมัติเป็นสมาชิกแล้ว
+    </div>
+  </div>
+</div>
+</section>
+
+<section>
+<h2>6. การชำระค่าธรรมเนียม / แนบสลิป</h2>
 
 <div class="pay">
 <b>ค่าธรรมเนียมสมาชิก 100 บาท / คน</b><br>
@@ -534,7 +581,7 @@ LINE ID / ช่องทางติดต่ออื่น <span class="req">
 </section>
 
 <section>
-<h2>6. การยินยอมให้ใช้ข้อมูล</h2>
+<h2>7. การยินยอมให้ใช้ข้อมูล</h2>
 <div class="privacy">
 <label class="check">
 <input type="checkbox" name="consent" value="1" required>
