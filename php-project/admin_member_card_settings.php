@@ -73,9 +73,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         if ($e instanceof PDOException) {
-            $error = 'ไม่สามารถบันทึกข้อมูลได้ กรุณาตรวจสอบว่าได้รัน migrate_v5.sql แล้ว';
+            error_log('Member card settings error: '.$e->getMessage());
+            $error = 'ไม่สามารถบันทึกข้อมูลได้ กรุณาตรวจสอบฐานข้อมูลและ migrate_v5.sql';
         } else {
-            $error = $e->getMessage();
+            $error = safe_error_message($e);
         }
     }
 }
