@@ -1,0 +1,42 @@
+name: PHP Production Checks
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  php-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: pdo_mysql, fileinfo
+          coverage: none
+
+      - name: Lint PHP files
+        run: |
+          find php-project -type f -name '*.php' -print0 | xargs -0 -n1 php -l
+
+      - name: Check for committed local secrets
+        run: |
+          test ! -f php-project/config.local.php
+          if grep -R --line-number --exclude='config.local.example.php' --exclude-dir='.git' -E "DB_PASS[[:space:]]*=[[:space:]]*['\"][^'\"]+|password[[:space:]]*=[[:space:]]*['\"][^'\"]+" .; then
+            echo "Potential hard-coded secret found"
+            exit 1
+          fi
+
+      - name: Verify production files
+        run: |
+          test -f php-project/sql/migrate_v6.sql
+          test -f php-project/secure_file.php
+          test -f deploy/nginx-production.conf
+          test -f PRODUCTION_DEPLOY.md
