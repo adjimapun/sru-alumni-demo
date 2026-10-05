@@ -5,6 +5,7 @@ $u = require_login();
 $pdo = db();
 $err = '';
 $newPhoto = null;
+$newSlip = null;
 
 $faculties = $pdo->query('SELECT id,name FROM faculties WHERE is_active=1 ORDER BY name')->fetchAll();
 $memberTypes = $pdo->query('SELECT id,name,allow_other_text FROM member_types WHERE is_active=1 ORDER BY id')->fetchAll();
@@ -219,7 +220,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ->execute([$applicationNo, $appId]);
         }
 
-        $slip = upload_file('slip', 'slip_');
+        $newSlip = upload_file('slip', 'slip_');
+        $slip = $newSlip;
 
         if ($slip) {
             // ช่องทางล็อกฝั่ง Server ไม่รับค่าจาก Browser
@@ -256,6 +258,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($newPhoto) {
             delete_managed_upload($newPhoto, 'member_photo_');
             $newPhoto = null;
+        }
+        if ($newSlip) {
+            delete_managed_upload($newSlip, 'slip_');
+            $newSlip = null;
         }
         $err = safe_error_message($e);
     }
