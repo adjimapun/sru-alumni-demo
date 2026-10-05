@@ -19,6 +19,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $citizen = preg_replace('/\D/', '', $_POST['citizen_id'] ?? '');
     $phone = preg_replace('/\D/', '', $_POST['phone'] ?? '');
     $confirmPhone = preg_replace('/\D/', '', $_POST['confirm_phone'] ?? '');
+    $password = (string)($_POST['password'] ?? '');
+    $confirmPassword = (string)($_POST['confirm_password'] ?? '');
 
     try {
         if ($action === 'register') {
@@ -31,24 +33,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($phone !== $confirmPhone) {
                 throw new RuntimeException('หมายเลขโทรศัพท์มือถือทั้งสองช่องไม่ตรงกัน');
             }
+            if (!password_meets_policy($password)) {
+                throw new RuntimeException('รหัสผ่านต้องมีอย่างน้อย 12 ตัวอักษร และมีทั้งตัวอักษรภาษาอังกฤษและตัวเลข');
+            }
+            if ($password !== $confirmPassword) {
+                throw new RuntimeException('รหัสผ่านและยืนยันรหัสผ่านไม่ตรงกัน');
+            }
             if (empty($_POST['privacy'])) {
                 throw new RuntimeException('กรุณายอมรับเงื่อนไขการใช้งานและนโยบายความเป็นส่วนตัว');
             }
 
             $st = db()->prepare(
-                'INSERT INTO users(citizen_hash,citizen_last4,phone,password_hash) VALUES(?,?,?,?)'
+                'INSERT INTO users(citizen_hash,citizen_last4,phone,password_hash,must_change_password) VALUES(?,?,?,?,0)'
             );
             $st->execute([
                 citizen_hash($citizen),
                 substr($citizen, -4),
                 $phone,
-                password_hash($phone, PASSWORD_DEFAULT)
+                password_hash($password, PASSWORD_DEFAULT)
             ]);
 
             $success = 'สมัครบัญชีสำเร็จ สามารถเข้าสู่ระบบได้ทันที';
             $activeTab = 'login';
         } elseif ($action === 'login') {
-            if (!preg_match('/^\d{13}$/', $citizen) || !preg_match('/^0\d{9}$/', $phone)) {
+            if (!preg_match('/^\d{13}$/', $citizen) || $password === '') {
                 record_auth_attempt('member_login', $citizen, false);
                 throw new RuntimeException('Username หรือ Password ไม่ถูกต้อง');
             }
@@ -63,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $st->execute([citizen_hash($citizen)]);
             $u = $st->fetch();
 
-            if (!$u || !password_verify($phone, $u['password_hash'])) {
+            if (!$u || !password_verify($password, $u['password_hash'])) {
                 record_auth_attempt('member_login', $citizen, false);
                 throw new RuntimeException('Username หรือ Password ไม่ถูกต้อง');
             }
@@ -486,21 +494,19 @@ input:focus{
     </label>
 
     <label class="field">
-      Password — หมายเลขโทรศัพท์มือถือ
+      Password — รหัสผ่าน
       <input
-        id="loginPhone"
-        name="phone"
+        id="loginPassword"
+        name="password"
         type="password"
-        maxlength="10"
-        inputmode="tel"
         autocomplete="current-password"
-        placeholder="08XXXXXXXX"
+        placeholder="กรอกรหัสผ่าน"
         required
       >
     </label>
 
     <label class="check">
-      <input type="checkbox" onchange="document.getElementById('loginPhone').type=this.checked?'text':'password'">
+      <input type="checkbox" onchange="document.getElementById('loginPassword').type=this.checked?'text':'password'">
       <span>แสดงรหัสผ่าน</span>
     </label>
 
@@ -553,10 +559,34 @@ input:focus{
       >
     </label>
 
+    <label class="field">
+      รหัสผ่าน *
+      <input
+        id="regPassword"
+        name="password"
+        type="password"
+        minlength="12"
+        autocomplete="new-password"
+        placeholder="อย่างน้อย 12 ตัวอักษร มีตัวอักษรภาษาอังกฤษและตัวเลข"
+        required
+      >
+    </label>
+
+    <label class="field">
+      ยืนยันรหัสผ่าน *
+      <input
+        name="confirm_password"
+        type="password"
+        minlength="12"
+        autocomplete="new-password"
+        required
+      >
+    </label>
+
     <div class="hint">
       <b>ข้อมูลเข้าสู่ระบบ</b><br>
       Username = หมายเลขบัตรประชาชน<br>
-      Password เริ่มต้น = หมายเลขโทรศัพท์มือถือ
+      Password = รหัสผ่านที่ผู้สมัครกำหนด
     </div>
 
     <label class="check">
