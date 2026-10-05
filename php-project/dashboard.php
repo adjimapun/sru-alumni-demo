@@ -104,6 +104,7 @@ header small{display:block;opacity:.84}.demo{margin-left:auto;font-size:12px;bac
       <a class="btn" href="application.php"><?= $app ? 'เปิด / แก้ไขใบสมัครสมาชิก' : 'กรอกใบสมัครสมาชิก' ?></a>
       <a class="btn alt" href="track.php">ติดตามสถานะ</a>
       <?php if ($member): ?>
+        <a class="btn" href="member_card.php">บัตรสมาชิกดิจิทัล</a>
         <a class="btn alt" href="receipt.php">ใบเสร็จรับเงิน</a>
       <?php endif; ?>
     </div>
