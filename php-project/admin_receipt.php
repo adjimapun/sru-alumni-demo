@@ -55,9 +55,8 @@ if (!empty($r['member_type_other'])) {
     $memberTypeText .= ' - '.$r['member_type_other'];
 }
 
-$scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
 $basePath = rtrim(str_replace('\\','/',dirname($_SERVER['PHP_SELF'])), '/');
-$verifyUrl = $scheme.'://'.$_SERVER['HTTP_HOST'].$basePath.'/verify_receipt.php?code='.urlencode($r['verification_code']);
+$verifyUrl = public_base_url().$basePath.'/verify_receipt.php?code='.urlencode($r['verification_code']);
 $downloadName = 'SRU-Alumni-Receipt-'.$r['receipt_no'].'.png';
 $receiptSettings = receipt_settings();
 $payeeDisplayName = trim((string)($receiptSettings['payee_name'] ?? ''));
