@@ -264,7 +264,7 @@ function require_login(): array {
 }
 
 function password_meets_policy(string $password): bool {
-    return mb_strlen($password, 'UTF-8') >= 12
+    return strlen($password) >= 12
         && preg_match('/[A-Za-z]/', $password)
         && preg_match('/[0-9]/', $password);
 }
