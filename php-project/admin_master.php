@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } catch (PDOException $e) {
         $error = 'ข้อมูลซ้ำหรือไม่สามารถบันทึกได้';
     } catch (Throwable $e) {
-        $error = $e->getMessage();
+        $error = safe_error_message($e);
     }
 }
 
