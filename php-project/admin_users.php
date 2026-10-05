@@ -42,8 +42,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $schemaReady) {
             if (strlen($username) < 3) {
                 throw new RuntimeException('Username ต้องมีอย่างน้อย 3 ตัวอักษร');
             }
-            if (strlen($password) < 8) {
-                throw new RuntimeException('Password ต้องมีอย่างน้อย 8 ตัวอักษร');
+            if (strlen($password) < 12) {
+                throw new RuntimeException('Password ต้องมีอย่างน้อย 12 ตัวอักษร');
             }
 
             $st = $pdo->prepare(
@@ -101,8 +101,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $schemaReady) {
             if ($id <= 0) {
                 throw new RuntimeException('ข้อมูลผู้ดูแลระบบไม่ถูกต้อง');
             }
-            if (strlen($password) < 8) {
-                throw new RuntimeException('Password ใหม่ต้องมีอย่างน้อย 8 ตัวอักษร');
+            if (strlen($password) < 12) {
+                throw new RuntimeException('Password ใหม่ต้องมีอย่างน้อย 12 ตัวอักษร');
             }
 
             $st = $pdo->prepare(
@@ -140,7 +140,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $schemaReady) {
             $error = 'ไม่สามารถบันทึกข้อมูลผู้ดูแลระบบได้';
         }
     } catch (Throwable $e) {
-        $error = $e->getMessage();
+        $error = safe_error_message($e);
     }
 }
 ?>
@@ -214,7 +214,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $schemaReady) {
 
       <label>
         Password
-        <input type="password" name="password" required minlength="8" autocomplete="new-password">
+        <input type="password" name="password" required minlength="12" autocomplete="new-password">
       </label>
     </div>
 
@@ -279,7 +279,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $schemaReady) {
             <input
               type="password"
               name="new_password"
-              minlength="8"
+              minlength="12"
               required
               placeholder="รหัสผ่านใหม่ ≥ 8 ตัว"
               autocomplete="new-password"
