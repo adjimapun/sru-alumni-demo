@@ -48,24 +48,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $success = 'สมัครบัญชีสำเร็จ สามารถเข้าสู่ระบบได้ทันที';
             $activeTab = 'login';
         } elseif ($action === 'login') {
+            if (!preg_match('/^\d{13}$/', $citizen) || !preg_match('/^0\d{9}$/', $phone)) {
+                record_auth_attempt('member_login', $citizen, false);
+                throw new RuntimeException('Username หรือ Password ไม่ถูกต้อง');
+            }
+
+            $limit = auth_rate_limit_status('member_login', $citizen);
+            if ($limit['blocked']) {
+                $minutes = max(1, (int)ceil(((int)$limit['retry_after']) / 60));
+                throw new RuntimeException('มีการเข้าสู่ระบบไม่สำเร็จหลายครั้ง กรุณารอประมาณ '.$minutes.' นาทีแล้วลองใหม่');
+            }
+
             $st = db()->prepare('SELECT * FROM users WHERE citizen_hash=? LIMIT 1');
             $st->execute([citizen_hash($citizen)]);
             $u = $st->fetch();
 
             if (!$u || !password_verify($phone, $u['password_hash'])) {
+                record_auth_attempt('member_login', $citizen, false);
                 throw new RuntimeException('Username หรือ Password ไม่ถูกต้อง');
             }
 
+            record_auth_attempt('member_login', $citizen, true);
             session_regenerate_id(true);
-            $_SESSION['user_id'] = $u['id'];
+            $_SESSION['user_id'] = (int)$u['id'];
+            $_SESSION['_last_regeneration'] = time();
 
             header('Location: dashboard.php');
             exit;
         }
     } catch (PDOException $e) {
-        $error = 'เลขบัตรประชาชนหรือเบอร์โทรศัพท์นี้มีบัญชีแล้ว';
+        $driverCode = (int)($e->errorInfo[1] ?? 0);
+        if ($action === 'register' && $driverCode === 1062) {
+            $error = 'เลขบัตรประชาชนหรือเบอร์โทรศัพท์นี้มีบัญชีแล้ว';
+        } else {
+            $error = safe_error_message($e);
+        }
     } catch (Throwable $e) {
-        $error = $e->getMessage();
+        $error = safe_error_message($e);
     }
 }
 ?>
