@@ -6,8 +6,14 @@ $error = '';
 $success = '';
 
 if (isset($_GET['logout'])) {
+    if (!verify_csrf_value($_GET['token'] ?? null)) {
+        http_response_code(419);
+        exit('คำขอออกจากระบบไม่ถูกต้อง');
+    }
+
     unset($_SESSION['admin_id']);
     session_regenerate_id(true);
+    $_SESSION['_last_regeneration'] = time();
     header('Location: admin.php');
     exit;
 }
@@ -16,19 +22,32 @@ if (!current_admin()) {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         verify_csrf();
 
-        $st = $pdo->prepare('SELECT * FROM admins WHERE username=? LIMIT 1');
-        $st->execute([trim($_POST['username'] ?? '')]);
-        $a = $st->fetch();
+        $username = trim((string)($_POST['username'] ?? ''));
+        $password = (string)($_POST['password'] ?? '');
 
-        $isActive = $a && (!isset($a['is_active']) || (int)$a['is_active'] === 1);
-        if ($isActive && password_verify($_POST['password'] ?? '', $a['password_hash'])) {
-            session_regenerate_id(true);
-            $_SESSION['admin_id'] = $a['id'];
-            header('Location: admin_dashboard.php');
-            exit;
+        $limit = auth_rate_limit_status('admin_login', $username);
+        if ($limit['blocked']) {
+            $minutes = max(1, (int)ceil(((int)$limit['retry_after']) / 60));
+            $error = 'มีการเข้าสู่ระบบไม่สำเร็จหลายครั้ง กรุณารอประมาณ '.$minutes.' นาทีแล้วลองใหม่';
+        } else {
+            $st = $pdo->prepare('SELECT * FROM admins WHERE username=? LIMIT 1');
+            $st->execute([$username]);
+            $a = $st->fetch();
+
+            $isActive = $a && (!isset($a['is_active']) || (int)$a['is_active'] === 1);
+
+            if ($isActive && password_verify($password, $a['password_hash'])) {
+                record_auth_attempt('admin_login', $username, true);
+                session_regenerate_id(true);
+                $_SESSION['admin_id'] = (int)$a['id'];
+                $_SESSION['_last_regeneration'] = time();
+                header('Location: admin_dashboard.php');
+                exit;
+            }
+
+            record_auth_attempt('admin_login', $username, false);
+            $error = 'เข้าสู่ระบบไม่สำเร็จ';
         }
-
-        $error = 'เข้าสู่ระบบไม่สำเร็จ';
     }
     ?>
     <!doctype html>
@@ -161,15 +180,18 @@ function approvePayment(PDO $pdo, int $paymentId, int $adminId): array
         // รูปแบบ: ปี พ.ศ. 2 หลัก + running 4 หลัก เช่น 690001
         $memberNo = nextMemberNumber($pdo);
 
+        $verificationCode = bin2hex(random_bytes(16));
+
         $pdo->prepare(
             'INSERT INTO members(
-                application_id,user_id,approved_payment_id,member_no,status
-             ) VALUES(?,?,?,?,"active")'
+                application_id,user_id,approved_payment_id,member_no,verification_code,status
+             ) VALUES(?,?,?,?,?,"active")'
         )->execute([
             $payment['application_id'],
             $payment['user_id'],
             $paymentId,
-            $memberNo
+            $memberNo,
+            $verificationCode
         ]);
 
         $memberId = (int)$pdo->lastInsertId();
@@ -376,7 +398,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && current_admin()) {
         if ($pdo->inTransaction()) {
             $pdo->rollBack();
         }
-        $error = $e->getMessage();
+        $error = safe_error_message($e);
     }
 }
 
@@ -571,7 +593,7 @@ function admin_status_class(string $status): string
     </span>
 
     <a href="index.php">หน้าหลักของระบบ</a>
-    <a href="admin.php?logout=1">ออกจากระบบ</a>
+    <a href="admin.php?logout=1&amp;token=<?=h(csrf_token())?>">ออกจากระบบ</a>
   </nav>
 </header>
 
