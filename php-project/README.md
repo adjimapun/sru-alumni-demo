@@ -141,7 +141,8 @@ Production ควรใช้งาน HTTPS เท่านั้น
 - จำกัด dimension/pixel
 - PDF ต้องมี magic header `%PDF-`
 - ชื่อไฟล์สุ่ม
-- uploads ไม่อนุญาต execute PHP/script
+- uploads ไม่อนุญาตเปิดไฟล์โดยตรงจาก Web
+- ไฟล์สลิป รูปสมาชิก ลายเซ็น และเกียรติบัตรถูกส่งผ่าน `secure_file.php` หลังตรวจสิทธิ์
 
 ## QR Verification
 
