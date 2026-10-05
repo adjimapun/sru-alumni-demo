@@ -176,7 +176,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $schemaReady) {
     </span>
 
     <a href="index.php">หน้าหลักของระบบ</a>
-    <a href="admin.php?logout=1">ออกจากระบบ</a>
+    <a href="admin.php?logout=1&amp;token=<?=h(csrf_token())?>">ออกจากระบบ</a>
   </nav>
 </header>
 
