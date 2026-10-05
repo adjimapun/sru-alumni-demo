@@ -1,7 +1,6 @@
 -- Migration สำหรับฐานข้อมูลเดิมของ SRU Alumni
+-- รันบน Database ของระบบที่เลือกอยู่เท่านั้น (ไม่มี USE แบบ hard-code)
 -- รันไฟล์นี้ครั้งเดียวบนฐานข้อมูลที่สร้างจากเวอร์ชันก่อนหน้า
-USE sru_alumni;
-
 CREATE TABLE IF NOT EXISTS faculties (
   id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(255) NOT NULL UNIQUE,
