@@ -56,6 +56,7 @@ CREATE TABLE applications (
   occupation VARCHAR(255) NULL,
   member_type_id BIGINT UNSIGNED NOT NULL DEFAULT 1,
   member_type_other VARCHAR(255) NULL,
+  member_photo_path VARCHAR(255) NULL,
   status VARCHAR(40) NOT NULL DEFAULT 'pending_payment',
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -95,6 +96,30 @@ VALUES(
   'ผู้รับเงิน',
   'สมาคมศิษย์เก่ามหาวิทยาลัยราชภัฏสุราษฎร์ธานี',
   NULL
+);
+
+
+CREATE TABLE member_number_sequences (
+  year2 CHAR(2) PRIMARY KEY,
+  last_number INT UNSIGNED NOT NULL DEFAULT 0,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+CREATE TABLE member_card_settings (
+  id TINYINT UNSIGNED PRIMARY KEY,
+  president_name VARCHAR(255) NULL,
+  president_position VARCHAR(255) NOT NULL DEFAULT 'นายกสมาคมศิษย์เก่า มรส.',
+  president_signature_path VARCHAR(255) NULL,
+  updated_by BIGINT UNSIGNED NULL,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  CONSTRAINT fk_member_card_settings_admin
+    FOREIGN KEY(updated_by) REFERENCES admins(id) ON DELETE SET NULL
+) ENGINE=InnoDB;
+
+INSERT INTO member_card_settings(
+  id,president_name,president_position,president_signature_path
+) VALUES (
+  1,NULL,'นายกสมาคมศิษย์เก่า มรส.',NULL
 );
 
 CREATE TABLE payments (
