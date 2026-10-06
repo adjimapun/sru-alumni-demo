@@ -250,16 +250,6 @@ function require_login(): array {
         exit;
     }
 
-    $script = basename((string)($_SERVER['PHP_SELF'] ?? ''));
-    if (
-        isset($u['must_change_password']) &&
-        (int)$u['must_change_password'] === 1 &&
-        $script !== 'change_password.php'
-    ) {
-        header('Location: change_password.php');
-        exit;
-    }
-
     return $u;
 }
 
