@@ -108,7 +108,6 @@ header small{display:block;opacity:.84}.header-logout{margin-left:auto;display:i
     <div class="toolbar">
       <a class="btn" href="application.php"><?= $app ? 'เปิด / แก้ไขใบสมัครสมาชิก' : 'กรอกใบสมัครสมาชิก' ?></a>
       <a class="btn alt" href="track.php">ติดตามสถานะ</a>
-      <a class="btn alt" href="change_password.php">เปลี่ยนรหัสผ่าน</a>
       <?php if ($member): ?>
         <a class="btn" href="member_card.php">บัตรสมาชิกดิจิทัล</a>
         <a class="btn alt" href="receipt.php">ใบเสร็จรับเงิน</a>
