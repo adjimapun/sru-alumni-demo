@@ -13,9 +13,10 @@ mysqldump --single-transaction --routines --triggers DATABASE_NAME > alumni_befo
 ## 2. Database
 
 ฐานข้อมูลเดิม:
-- ถ้าถึง V4 แล้ว: รัน V5 → V6 → V7
-- ถ้าถึง V5 แล้ว: รัน V6 → V7
-- ถ้าเคยรัน V6 เวอร์ชันเดิมแล้ว: รัน V7
+- ถ้าถึง V4 แล้ว: รัน V5 → V6 → V7 → V8
+- ถ้าถึง V5 แล้ว: รัน V6 → V7 → V8
+- ถ้าเคยรันถึง V7 แล้ว: รัน V8
+- V8 จะปรับรหัสสมาชิกเดิม `ALUMNI-xxxxxx` เป็นเลข 6 หลัก เช่น `690001`
 - ห้ามรัน migration ที่เพิ่ม Column/Table เดิมซ้ำ
 
 ฐานข้อมูลใหม่:
