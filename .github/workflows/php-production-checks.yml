@@ -38,6 +38,7 @@ jobs:
         run: |
           test -f php-project/sql/migrate_v6.sql
           test -f php-project/sql/migrate_v7.sql
+          test -f php-project/sql/migrate_v8.sql
           test -f php-project/secure_file.php
           test -f deploy/nginx-production.conf
           test -f PRODUCTION_DEPLOY.md
