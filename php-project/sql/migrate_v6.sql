@@ -2,7 +2,7 @@
 -- รันไฟล์นี้ครั้งเดียว หลัง migrate_v5.sql
 
 ALTER TABLE users
-  ADD COLUMN must_change_password TINYINT(1) NOT NULL DEFAULT 1 AFTER password_hash;
+  ADD COLUMN must_change_password TINYINT(1) NOT NULL DEFAULT 0 AFTER password_hash;
 
 ALTER TABLE members
   ADD COLUMN verification_code CHAR(32) NULL AFTER member_no;
