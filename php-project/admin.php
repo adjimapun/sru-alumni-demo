@@ -83,7 +83,7 @@ if (!current_admin()) {
 }
 
 /**
- * สร้างเลขสมาชิก: ปี พ.ศ. 2 หลัก + running 4 หลัก
+ * สร้างรหัสสมาชิก: ปีปฏิทิน พ.ศ. 2 หลัก + running number 4 หลัก
  * ตัวอย่าง พ.ศ. 2569 ลำดับ 1 = 690001
  * ต้องเรียกภายใน Transaction
  */
@@ -105,13 +105,13 @@ function nextMemberNumber(PDO $pdo): string
     $row = $st->fetch();
 
     if (!$row) {
-        throw new RuntimeException('ไม่สามารถสร้างเลขสมาชิกได้');
+        throw new RuntimeException('ไม่สามารถสร้างรหัสสมาชิกได้');
     }
 
     $next = (int)$row['last_number'] + 1;
 
     if ($next > 9999) {
-        throw new RuntimeException('เลขสมาชิกประจำปี '.$year2.' ครบ 9,999 รายการแล้ว');
+        throw new RuntimeException('รหัสสมาชิกประจำปี '.$year2.' ครบ 9,999 รายการแล้ว');
     }
 
     $pdo->prepare(
@@ -165,19 +165,24 @@ function approvePayment(PDO $pdo, int $paymentId, int $adminId): array
     )->execute([$payment['application_id']]);
 
     if ($member) {
-        // เคยอนุมัติแล้วแต่ถูกยกเลิก: ใช้เลขสมาชิกเดิมเพื่อไม่ให้เลขสมาชิกซ้ำ/สับสน
+        // เคยอนุมัติแล้วแต่ถูกยกเลิก: ใช้รหัสสมาชิกเดิมถ้าเป็นรูปแบบใหม่ 6 หลัก
+        // หากยังเป็นรูปแบบเก่า ALUMNI-xxxxxx ให้ออกรหัสใหม่ตาม ปี พ.ศ. 2 หลัก + running 4 หลัก
         $memberId = (int)$member['id'];
-        $memberNo = $member['member_no'];
+        $memberNo = (string)$member['member_no'];
+
+        if (!preg_match('/^[0-9]{6}$/', $memberNo)) {
+            $memberNo = nextMemberNumber($pdo);
+        }
 
         $pdo->prepare(
             'UPDATE members
-             SET approved_payment_id=?, status="active", approved_at=NOW(),
+             SET approved_payment_id=?, member_no=?, status="active", approved_at=NOW(),
                  cancelled_at=NULL, cancelled_by=NULL
              WHERE id=?'
-        )->execute([$paymentId, $memberId]);
+        )->execute([$paymentId, $memberNo, $memberId]);
     } else {
-        // ออกเลขสมาชิกทันทีเมื่อเจ้าหน้าที่อนุมัติการชำระเงิน
-        // รูปแบบ: ปี พ.ศ. 2 หลัก + running 4 หลัก เช่น 690001
+        // ออกรหัสสมาชิกทันทีเมื่อเจ้าหน้าที่อนุมัติการชำระเงิน
+        // รูปแบบ: ปีปฏิทิน พ.ศ. 2 หลัก + running number 4 หลัก เช่น 690001
         $memberNo = nextMemberNumber($pdo);
 
         $verificationCode = bin2hex(random_bytes(16));
@@ -237,7 +242,7 @@ function approvePayment(PDO $pdo, int $paymentId, int $adminId): array
 
 /**
  * ยกเลิกการอนุมัติสมาชิก
- * เก็บเลขสมาชิกและใบเสร็จไว้เป็นประวัติ แต่เปลี่ยนสถานะเป็น cancelled
+ * เก็บรหัสสมาชิกและใบเสร็จไว้เป็นประวัติ แต่เปลี่ยนสถานะเป็น cancelled
  * ต้องเรียกภายใน Transaction
  */
 function cancelApproval(PDO $pdo, int $applicationId, int $adminId): string
@@ -302,7 +307,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && current_admin()) {
                 if ($result['skipped']) {
                     $success = 'รายการนี้ได้รับการอนุมัติแล้ว';
                 } else {
-                    $success = 'อนุมัติสมาชิกแล้ว เลขสมาชิก '.$result['member_no'].
+                    $success = 'อนุมัติสมาชิกแล้ว รหัสสมาชิก '.$result['member_no'].
                                ' และออกใบเสร็จ '.$result['receipt_no'].' เรียบร้อย';
                 }
             } elseif ($decision === 'invalid') {
@@ -749,7 +754,7 @@ $canApprove = !$isApproved && !empty($r['payment_id']);
 <span class="badge ok"><?=h($r['member_no'])?></span>
 <?php elseif (!empty($r['member_no']) && ($r['member_status'] ?? '') === 'cancelled'): ?>
 <br>
-<span class="note">เลขสมาชิกเดิม: <?=h($r['member_no'])?> (ยกเลิก)</span>
+<span class="note">รหัสสมาชิกเดิม: <?=h($r['member_no'])?> (ยกเลิก)</span>
 <?php endif; ?>
 </td>
 
@@ -800,7 +805,7 @@ $canApprove = !$isApproved && !empty($r['payment_id']);
 
 <form
   method="post"
-  onsubmit="return confirm('ยืนยันการยกเลิกการอนุมัติสมาชิกนี้หรือไม่? เลขสมาชิกและใบเสร็จจะถูกเปลี่ยนเป็นสถานะยกเลิก');"
+  onsubmit="return confirm('ยืนยันการยกเลิกการอนุมัติสมาชิกนี้หรือไม่? รหัสสมาชิกและใบเสร็จจะถูกเปลี่ยนเป็นสถานะยกเลิก');"
 >
 <input type="hidden" name="csrf" value="<?=h(csrf_token())?>">
 <input
