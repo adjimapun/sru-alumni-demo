@@ -1,4 +1,4 @@
--- Migration V5: บัตรสมาชิกดิจิทัล + เลขสมาชิกแบบ ปี 2 หลัก + running 4 หลัก
+-- Migration V5: บัตรสมาชิกดิจิทัล + รหัสสมาชิกแบบ ปีปฏิทิน พ.ศ. 2 หลัก + running number 4 หลัก
 -- ตัวอย่าง พ.ศ. 2569 + running 0001 = 690001
 -- รันไฟล์นี้ครั้งเดียว หลัง migrate_v4.sql
 
@@ -34,7 +34,7 @@ INSERT INTO member_card_settings(
   NULL
 );
 
--- ตั้งค่า running เริ่มต้นจากเลขสมาชิกแบบใหม่ที่มีอยู่แล้ว (ถ้ามี)
+-- ตั้งค่า running เริ่มต้นจากรหัสสมาชิกแบบใหม่ที่มีอยู่แล้ว (ถ้ามี)
 INSERT INTO member_number_sequences(year2,last_number)
 SELECT
   LEFT(member_no,2) AS year2,
