@@ -40,7 +40,7 @@ body{margin:0;font-family:'Kanit',sans-serif;background:var(--bg);color:var(--in
 a{color:inherit}.shell{display:grid;grid-template-columns:230px 1fr;max-width:1280px;margin:22px auto;gap:20px;padding:0 16px}
 header{background:linear-gradient(120deg,#064c78,#0786a6);color:#fff;padding:16px 5%;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:20}
 .crest{width:58px;height:58px;display:grid;place-items:center;flex:0 0 auto}.crest img{width:100%;height:100%;object-fit:contain;display:block}
-header small{display:block;opacity:.84}.demo{margin-left:auto;font-size:12px;background:#ffffff22;padding:7px 11px;border-radius:18px;white-space:nowrap}
+header small{display:block;opacity:.84}.header-logout{margin-left:auto;display:inline-flex;align-items:center;gap:6px;font-size:13px;background:#ffffff22;color:#fff;padding:8px 13px;border:1px solid #ffffff38;border-radius:18px;white-space:nowrap;text-decoration:none;font-weight:500}.header-logout:hover{background:#ffffff32}
 .side,.card{background:#fff;border-radius:18px;box-shadow:0 8px 28px #173b5512}.side{padding:18px;height:max-content;position:sticky;top:105px}
 .side-title{font-weight:600}.note{font-size:12px;color:var(--mut)}.side .note{margin:6px 0 12px}
 .menu{display:block;text-decoration:none;padding:11px 12px;border-radius:10px;margin:5px 0;color:#536c80}.menu:hover,.menu.on{background:#eaf6fb;color:var(--p);font-weight:600}
@@ -49,7 +49,7 @@ header small{display:block;opacity:.84}.demo{margin-left:auto;font-size:12px;bac
 .toolbar{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 0}.btn{display:inline-block;text-decoration:none;border:0;border-radius:10px;padding:11px 18px;background:var(--p);color:#fff;font-weight:600;cursor:pointer}.btn.alt{background:#eaf4f8;color:var(--p)}
 .summary{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}.summary-item{padding:16px;border:1px solid #e4edf3;border-radius:14px;background:#f7fafc}.summary-item span{display:block;font-size:12px;color:var(--mut);margin-bottom:5px}.summary-item b{font-size:15px;color:var(--ink);word-break:break-word}
 @media(max-width:900px){.shell{grid-template-columns:1fr}.side{position:static}.summary{grid-template-columns:1fr}}
-@media(max-width:650px){header{padding:13px 16px}header b{font-size:14px}header small{font-size:11px}.demo{display:none}.crest{width:52px;height:52px}.shell{padding:0 12px;margin:14px auto}.hero,.card{padding:20px}}
+@media(max-width:650px){header{padding:13px 16px}header b{font-size:14px}header small{font-size:11px}.header-logout{padding:8px 10px;font-size:12px}.crest{width:52px;height:52px}.shell{padding:0 12px;margin:14px auto}.hero,.card{padding:20px}}
 </style>
 </head>
 <body>
@@ -59,7 +59,7 @@ header small{display:block;opacity:.84}.demo{margin-left:auto;font-size:12px;bac
     <b>สมาคมศิษย์เก่ามหาวิทยาลัยราชภัฏสุราษฎร์ธานี</b>
     <small>Suratthani Rajabhat University Alumni Association</small>
   </div>
-  <span class="demo">PHP + DATABASE</span>
+  <a class="header-logout" href="logout.php?token=<?=h(csrf_token())?>">↪ ออกจากระบบ</a>
 </header>
 
 <div class="shell">
