@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 throw new RuntimeException('กรุณากรอกหมายเลขโทรศัพท์มือถือ 10 หลัก');
             }
             $st = db()->prepare(
-                'INSERT INTO users(citizen_hash,citizen_last4,phone,password_hash,must_change_password) VALUES(?,?,?,?,1)'
+                'INSERT INTO users(citizen_hash,citizen_last4,phone,password_hash,must_change_password) VALUES(?,?,?,?,0)'
             );
             $st->execute([
                 citizen_hash($citizen),
@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 password_hash($phone, PASSWORD_DEFAULT)
             ]);
 
-            $success = 'สมัครบัญชีสำเร็จ Username คือหมายเลขบัตรประชาชน และรหัสผ่านเริ่มต้นคือหมายเลขโทรศัพท์มือถือ ระบบจะให้เปลี่ยนรหัสผ่านเมื่อเข้าสู่ระบบครั้งแรก';
+            $success = 'สมัครบัญชีสำเร็จ Username คือหมายเลขบัตรประชาชน และรหัสผ่านคือหมายเลขโทรศัพท์มือถือ';
             $activeTab = 'login';
         } elseif ($action === 'login') {
             if (!preg_match('/^\d{13}$/', $citizen) || $password === '') {
@@ -537,8 +537,7 @@ input:focus{
     <div class="hint">
       <b>ใช้เพียง 2 ข้อมูลในการสมัครบัญชี</b><br>
       Username = หมายเลขบัตรประชาชน<br>
-      รหัสผ่านเริ่มต้น = หมายเลขโทรศัพท์มือถือ<br>
-      <span class="note">เพื่อความปลอดภัย ระบบจะให้เปลี่ยนรหัสผ่านเมื่อเข้าสู่ระบบครั้งแรก</span>
+      รหัสผ่าน = หมายเลขโทรศัพท์มือถือ
     </div>
 
     <button class="btn" type="submit">สมัครบัญชี</button>
