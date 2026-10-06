@@ -51,7 +51,7 @@ if (preg_match('/^[a-f0-9]{32}$/', $code)) {
 <p>เลขที่ใบเสร็จ: <b><?=h($receipt['receipt_no'])?></b></p>
 <p>วันที่ออกใบเสร็จ: <?=h($receipt['receipt_date'])?></p>
 <p>ผู้ชำระ: <?=h(trim($receipt['title_prefix'].' '.$receipt['full_name']))?></p>
-<p>เลขสมาชิก: <b><?=h($receipt['member_no'])?></b></p>
+<p>รหัสสมาชิก: <b><?=h($receipt['member_no'])?></b></p>
 <p>จำนวนเงิน: <b><?=number_format((float)$receipt['amount'],2)?> บาท</b></p>
 
 <?php elseif ($receipt): ?>
@@ -62,7 +62,7 @@ if (preg_match('/^[a-f0-9]{32}$/', $code)) {
 </div>
 
 <p>เลขที่ใบเสร็จ: <b><?=h($receipt['receipt_no'])?></b></p>
-<p>เลขสมาชิก: <?=h($receipt['member_no'])?></p>
+<p>รหัสสมาชิก: <?=h($receipt['member_no'])?></p>
 <?php if (!empty($receipt['cancelled_at'])): ?>
 <p>วันที่ยกเลิก: <?=h($receipt['cancelled_at'])?></p>
 <?php endif; ?>
