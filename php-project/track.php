@@ -11,5 +11,5 @@ if($app){
 <?php if(!$app):?><div class="alert">ยังไม่มีใบสมัคร</div><a class="btn" href="application.php">กรอกใบสมัคร</a>
 <?php else:?><p>เลขที่ใบสมัคร <b><?=h($app['application_no'])?></b></p><div class="status"><b><?=h(app_status_th($app['status']))?></b></div>
 <?php if($payment):?><div class="info"><h3>หลักฐานการชำระเงินล่าสุด</h3><p>จำนวน <?=number_format((float)$payment['amount'],2)?> บาท · สถานะ <?=h(payment_status_th($payment['status']))?></p><?php if($payment['note']):?><p>หมายเหตุ: <?=h($payment['note'])?></p><?php endif;?></div><?php endif;?>
-<?php if($member):?><div class="alert ok"><b>สมาชิกสมบูรณ์</b><br>เลขสมาชิก <?=h($member['member_no'])?></div><?php endif;?>
+<?php if($member):?><div class="alert ok"><b>สมาชิกสมบูรณ์</b><br>รหัสสมาชิก <?=h($member['member_no'])?></div><?php endif;?>
 <div class="actions"><a class="btn alt" href="application.php">เปิดใบสมัคร / แนบสลิป</a><?php if($member):?><a class="btn" href="member_card.php">บัตรสมาชิกดิจิทัล</a><?php endif;?><?php if($receipt):?><a class="btn alt" href="receipt.php">ดูใบเสร็จ</a><?php endif;?></div><?php endif;?></div></main></body></html>
