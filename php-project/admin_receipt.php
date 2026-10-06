@@ -152,7 +152,7 @@ body{margin:0;background:#eaf4f8;font-family:'Kanit',sans-serif;color:#123b59}
   </svg>
 </span>ได้รับเงินจาก</h3>
         <div class="info-row"><div class="label">ชื่อ-นามสกุล</div><div><?=h(trim($r['title_prefix'].' '.$r['full_name']))?></div></div>
-        <div class="info-row"><div class="label">เลขที่สมาชิก</div><div><b><?=h($r['member_no'])?></b></div></div>
+        <div class="info-row"><div class="label">รหัสสมาชิก</div><div><b><?=h($r['member_no'])?></b></div></div>
         <div class="info-row"><div class="label">ประเภทสมาชิก</div><div><?=h($memberTypeText)?></div></div>
       </div>
 
