@@ -100,9 +100,11 @@ body{
     <div class="status fail">ไม่พบข้อมูลสมาชิก</div>
   <?php elseif (!$isActive): ?>
     <div class="status fail">สมาชิกนี้ไม่ได้อยู่ในสถานะใช้งาน</div>
+    <div class="label" style="margin-top:12px">รหัสสมาชิก</div>
     <div class="no"><?=h($member['member_no'])?></div>
   <?php else: ?>
     <div class="status ok">✓ สมาชิกสมาคมศิษย์เก่า มรส. สถานะปกติ</div>
+    <div class="label" style="margin-top:12px">รหัสสมาชิก</div>
     <div class="no"><?=h($member['member_no'])?></div>
 
     <div class="info">
