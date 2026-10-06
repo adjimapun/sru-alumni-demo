@@ -24,7 +24,7 @@ if (strlen($phone) === 10) {
 
 $appStatus = $app ? app_status_th((string)$app['status']) : 'ยังไม่มีใบสมัคร';
 $appNo = $app['application_no'] ?? '-';
-$memberNo = $member['member_no'] ?? 'ยังไม่ได้รับเลขสมาชิก';
+$memberNo = $member['member_no'] ?? 'ยังไม่ได้รับรหัสสมาชิก';
 ?>
 <!doctype html>
 <html lang="th">
@@ -98,7 +98,7 @@ header small{display:block;opacity:.84}.demo{margin-left:auto;font-size:12px;bac
         <b><?=h($appStatus)?></b>
       </div>
       <div class="summary-item">
-        <span>เลขสมาชิก</span>
+        <span>รหัสสมาชิก</span>
         <b><?=h((string)$memberNo)?></b>
       </div>
     </div>
