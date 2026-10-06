@@ -68,7 +68,9 @@ header small{display:block;opacity:.84}.header-logout{margin-left:auto;display:i
   <p class="note">เข้าสู่ระบบ: <?=h($maskedCitizen)?></p>
   <a class="menu on" href="dashboard.php">⌂ หน้าหลัก</a>
   <a class="menu" href="application.php">▤ ใบสมัครสมาชิก</a>
-  <a class="menu" href="track.php">◷ ติดตามสถานะ</a>  <a class="menu" href="logout.php?token=<?=h(csrf_token())?>">↪ ออกจากระบบ</a>
+  <a class="menu" href="track.php">◷ ติดตามสถานะ</a>
+  <a class="menu" href="change_password.php">🔒 เปลี่ยนรหัสผ่าน</a>
+  <a class="menu" href="logout.php?token=<?=h(csrf_token())?>">↪ ออกจากระบบ</a>
 </aside>
 
 <main class="content">
