@@ -50,6 +50,10 @@ $basePath = rtrim(str_replace('\\','/',dirname($_SERVER['PHP_SELF'])), '/');
 $verifyUrl = public_base_url().$basePath.'/verify_receipt.php?code='.urlencode($r['verification_code']);
 $downloadName = 'SRU-Alumni-Receipt-'.$r['receipt_no'].'.png';
 $receiptSettings = receipt_settings();
+$payeeDisplayName = trim((string)($receiptSettings['payee_name'] ?? ''));
+if ($payeeDisplayName === '' || $payeeDisplayName === 'ผู้รับเงิน') {
+    $payeeDisplayName = 'นางสาวปัทมา แสนวงศ์';
+}
 ?>
 <!doctype html>
 <html lang="th">
@@ -213,6 +217,9 @@ body{margin:0;background:#eaf4f8;font-family:'Kanit',sans-serif;color:#123b59}
 .thank{font-size:15px;color:#527589}
 .signature{text-align:center;min-width:260px}.signature-image{display:block;max-width:220px;max-height:78px;object-fit:contain;margin:0 auto 4px}
 .signature .line{border-top:1px solid #7fa9bb;margin-top:38px;padding-top:7px}
+.signature-image + .line{margin-top:4px}
+.signature-role{display:block;font-size:15px;color:#123b59;margin-top:2px}
+.signature-position{display:block;font-size:13px;color:#5f7c8d;margin-top:2px}
 .system-note{text-align:center;font-size:12px;color:#7691a0;margin-top:10px}
 
 @media(max-width:850px){
@@ -329,9 +336,10 @@ body{margin:0;background:#eaf4f8;font-family:'Kanit',sans-serif;color:#123b59}
         >
       <?php endif; ?>
       <div class="line">
-        <b><?=h((string)$receiptSettings['payee_name'])?></b>
+        <b><?=h($payeeDisplayName)?></b>
+        <span class="signature-role">ผู้รับเงิน</span>
         <?php if (!empty($receiptSettings['payee_position'])): ?>
-          <br><?=h((string)$receiptSettings['payee_position'])?>
+          <span class="signature-position"><?=h((string)$receiptSettings['payee_position'])?></span>
         <?php endif; ?>
       </div>
     </div>
