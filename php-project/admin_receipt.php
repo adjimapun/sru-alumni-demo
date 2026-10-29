@@ -87,7 +87,7 @@ body{margin:0;background:#eaf4f8;font-family:'Kanit',sans-serif;color:#123b59}
 .top{display:grid;grid-template-columns:130px 1fr auto;gap:24px;align-items:center;padding-top:6px}
 .emblem{width:135px;height:145px;display:grid;place-items:center;background:transparent}
 .emblem img{max-width:132px;max-height:140px;object-fit:contain;display:block}
-.assoc h1{font-size:32px;margin:0;color:#073f65}.assoc .en{font-size:18px;color:#2f6987}.assoc .tag{font-size:14px;margin-top:8px;color:#557d93}
+.assoc h1{font-size:32px;margin:0;color:#073f65}.assoc .en{font-size:18px;color:#2f6987}.assoc .tax-id{font-size:14px;color:#3d6277;margin-top:4px}.assoc .tag{font-size:14px;margin-top:8px;color:#557d93}
 .doc-meta{text-align:right;font-size:16px}.doc-meta b{color:#073f65}
 .title{width:min(620px,80%);margin:26px auto 24px;text-align:center;background:linear-gradient(90deg,#0a6d91,#075b8f);color:#fff;padding:13px 24px;border-radius:60px}
 .title strong{display:block;font-size:31px;font-weight:600;line-height:1}.title span{font-size:17px;opacity:.92}
@@ -128,6 +128,7 @@ body{margin:0;background:#eaf4f8;font-family:'Kanit',sans-serif;color:#123b59}
     <div class="assoc">
       <h1>สมาคมศิษย์เก่า<br>มหาวิทยาลัยราชภัฏสุราษฎร์ธานี</h1>
       <div class="en">Suratthani Rajabhat University Alumni Association</div>
+      <div class="tax-id">เลขประจำตัวผู้เสียภาษี : <b>099-3-00051379-7</b></div>
       <div class="tag">“ศิษย์เก่า คือ พลังสำคัญในการพัฒนามหาวิทยาลัยและสังคม”</div>
     </div>
 
