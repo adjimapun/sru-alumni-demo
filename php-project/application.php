@@ -21,6 +21,65 @@ if ($app) {
     $latestPayment = $st->fetch() ?: null;
 }
 
+/**
+ * สร้างเลขที่ใบสมัครโดยแยกจาก applications.id
+ * ใช้เลขว่างลำดับต่ำสุดของปี พ.ศ. ปัจจุบัน เช่น APP-2569-00001
+ * ต้องเรียกภายใน Transaction
+ */
+function nextApplicationNumber(PDO $pdo): string
+{
+    $year4 = (string)thai_year();
+
+    $pdo->prepare(
+        'INSERT IGNORE INTO application_number_sequences(year4,last_number) VALUES(?,0)'
+    )->execute([$year4]);
+
+    // Lock แถวของปีนั้นเพื่อป้องกันการออกเลขซ้ำเมื่อมีการสมัครพร้อมกัน
+    $st = $pdo->prepare(
+        'SELECT last_number
+         FROM application_number_sequences
+         WHERE year4=?
+         FOR UPDATE'
+    );
+    $st->execute([$year4]);
+
+    if (!$st->fetch()) {
+        throw new RuntimeException('ไม่สามารถสร้างเลขที่ใบสมัครได้');
+    }
+
+    $prefix = 'APP-'.$year4.'-';
+    $st = $pdo->prepare(
+        'SELECT application_no
+         FROM applications
+         WHERE application_no LIKE ?
+         ORDER BY application_no'
+    );
+    $st->execute([$prefix.'%']);
+
+    $used = [];
+    foreach ($st->fetchAll() as $row) {
+        $applicationNo = (string)($row['application_no'] ?? '');
+        if (preg_match('/^APP-'.preg_quote($year4, '/').'-(\d{5})$/', $applicationNo, $m)) {
+            $used[(int)$m[1]] = true;
+        }
+    }
+
+    $next = 1;
+    while ($next <= 99999 && isset($used[$next])) {
+        $next++;
+    }
+
+    if ($next > 99999) {
+        throw new RuntimeException('เลขที่ใบสมัครประจำปี '.$year4.' ครบ 99,999 รายการแล้ว');
+    }
+
+    $pdo->prepare(
+        'UPDATE application_number_sequences SET last_number=? WHERE year4=?'
+    )->execute([$next, $year4]);
+
+    return $prefix.str_pad((string)$next, 5, '0', STR_PAD_LEFT);
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     verify_csrf();
 
@@ -215,7 +274,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $pdo->prepare($sql)->execute($vals);
             $appId = (int)$pdo->lastInsertId();
 
-            $applicationNo = 'APP-'.thai_year().'-'.str_pad((string)$appId, 5, '0', STR_PAD_LEFT);
+            $applicationNo = nextApplicationNumber($pdo);
             $pdo->prepare('UPDATE applications SET application_no=? WHERE id=?')
                 ->execute([$applicationNo, $appId]);
         }
