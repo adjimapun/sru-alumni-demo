@@ -100,6 +100,12 @@ VALUES(
 );
 
 
+CREATE TABLE application_number_sequences (
+  year4 CHAR(4) PRIMARY KEY,
+  last_number INT UNSIGNED NOT NULL DEFAULT 0,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
 CREATE TABLE member_number_sequences (
   year2 CHAR(2) PRIMARY KEY,
   last_number INT UNSIGNED NOT NULL DEFAULT 0,
