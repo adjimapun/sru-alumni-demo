@@ -110,6 +110,19 @@ function nextMemberNumber(PDO $pdo): string
 
     $next = (int)$row['last_number'] + 1;
 
+    $check = $pdo->prepare('SELECT 1 FROM members WHERE member_no=? LIMIT 1');
+
+    while ($next <= 9999) {
+        $candidate = $year2.str_pad((string)$next, 4, '0', STR_PAD_LEFT);
+        $check->execute([$candidate]);
+
+        if (!$check->fetchColumn()) {
+            break;
+        }
+
+        $next++;
+    }
+
     if ($next > 9999) {
         throw new RuntimeException('รหัสสมาชิกประจำปี '.$year2.' ครบ 9,999 รายการแล้ว');
     }
